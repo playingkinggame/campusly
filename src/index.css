@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #F5F8EF;
+  --color-forest: #08482D;
+  --color-forest-600: #0C5C3A;
+  --color-forest-900: #052E1D;
+  --color-mint: #DAE7C7;
+  --color-mint-300: #E9F1DC;
+  --color-ink: #14231B;
+  --color-muted: #5B6B61;
+  --color-line: #D6E0C8;
+  --color-danger: #B3261E;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 16px;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.01em; }
+
+/* Soft glass card */
+.glass {
+  background: rgba(255, 255, 255, 0.66);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(8, 72, 45, 0.10);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px -12px rgba(8, 72, 45, 0.25);
+}
+
+/* Visible focus ring for keyboard users */
+:focus-visible {
+  outline: 3px solid var(--color-forest);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.safe-top { padding-top: env(safe-area-inset-top, 0px); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

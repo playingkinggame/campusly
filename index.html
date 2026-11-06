@@ -1,0 +1,2342 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Campusly — Find Your People at VIT Chennai</title>
+    <meta name="description" content="Verified social and chat platform exclusively for VIT Chennai students. Connect with peers, find hackathon teammates, join clubs, and showcase campus achievements." />
+    <meta property="og:title" content="Campusly — Find Your People at VIT Chennai" />
+    <meta property="og:description" content="Verified social and chat platform exclusively for VIT Chennai students." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <style>
+      /* =====================================================
+         GLOBAL RESET & SYSTEM
+         ===================================================== */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+      body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background: #F5F8EF;
+        color: #101410;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: inherit; text-decoration: none; }
+      button { font: inherit; border: none; cursor: pointer; background: transparent; }
+
+      /* =====================================================
+         PART A: FILE 1 — REELMARK HERO (SCOPED AS .hero-sec)
+         ===================================================== */
+      .hero-sec {
+        --u: min(100vw / 1440, 100vh / 1080);
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        min-height: calc(1080 * var(--u));
+        background: #F5F8EF;
+        overflow: hidden;
+        user-select: none;
+      }
+      .hero-stage {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: calc(1440 * var(--u));
+        height: calc(1080 * var(--u));
+        transform: translate(-50%, -50%);
+        pointer-events: auto;
+      }
+      /* Top Bar */
+      .hero-nav {
+        position: absolute;
+        top: calc(29 * var(--u));
+        left: 0;
+        width: 100%;
+        height: calc(52 * var(--u));
+        display: flex;
+        align-items: center;
+        z-index: 50;
+      }
+      .hero-logo {
+        position: absolute;
+        left: calc(37 * var(--u));
+        top: calc(7 * var(--u));
+        display: inline-flex;
+        align-items: center;
+        gap: calc(9 * var(--u));
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 700;
+        font-size: calc(22 * var(--u));
+        color: #08482D;
+        letter-spacing: -0.03em;
+      }
+      .hero-logo-mark {
+        width: calc(30 * var(--u));
+        height: calc(30 * var(--u));
+        background: #08482D;
+        border-radius: calc(8 * var(--u));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #DAE7C7;
+      }
+      .hero-links {
+        position: absolute;
+        left: calc(480 * var(--u));
+        display: flex;
+        gap: calc(28 * var(--u));
+        list-style: none;
+        font-family: 'Inter', sans-serif;
+        font-size: calc(16.4 * var(--u));
+        font-weight: 500;
+        color: #38423B;
+      }
+      .hero-links a { transition: color 0.2s; }
+      .hero-links a:hover { color: #08482D; }
+      .hero-btn-login {
+        position: absolute;
+        left: calc(1205 * var(--u));
+        width: calc(96 * var(--u));
+        height: calc(40 * var(--u));
+        background: #FFFFFF;
+        color: #08482D;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: calc(15 * var(--u));
+        box-shadow: 0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(8, 72, 45, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s, background 0.2s;
+      }
+      .hero-btn-login:hover { transform: translateY(-1px); background: #fbfdf9; }
+      .hero-btn-signup {
+        position: absolute;
+        left: calc(1308 * var(--u));
+        width: calc(98 * var(--u));
+        height: calc(40 * var(--u));
+        background: #08482D;
+        color: #FFFFFF;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: calc(15 * var(--u));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s, background 0.2s;
+      }
+      .hero-btn-signup:hover { transform: translateY(-1px); background: #0b5a39; }
+
+      /* Hero Center Content */
+      .hero-badge {
+        position: absolute;
+        left: calc(575 * var(--u));
+        top: calc(115 * var(--u));
+        width: calc(292 * var(--u));
+        height: calc(37 * var(--u));
+        background: #DAE7C7;
+        color: #08482D;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        font-size: calc(16.6 * var(--u));
+        letter-spacing: -0.01em;
+      }
+      .hero-headline {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        top: calc(176 * var(--u));
+        text-align: center;
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 700;
+        font-size: calc(88 * var(--u));
+        line-height: calc(92 * var(--u));
+        color: #101410;
+        letter-spacing: -0.035em;
+      }
+      .hero-headline-line2 {
+        display: block;
+        letter-spacing: -0.022em;
+      }
+      .hero-subline {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        top: calc(394 * var(--u));
+        text-align: center;
+        font-family: 'Inter', sans-serif;
+        font-size: calc(20.8 * var(--u));
+        line-height: calc(32 * var(--u));
+        color: #5E5E61;
+      }
+
+      /* Doodles & Notes */
+      .hero-doodle-slashes {
+        position: absolute;
+        left: calc(263 * var(--u));
+        top: calc(377 * var(--u));
+        font-family: 'Caveat', cursive;
+        font-size: calc(44 * var(--u));
+        font-weight: 600;
+        color: #08482D;
+        transform: rotate(-10deg);
+      }
+      .hero-note-wins {
+        position: absolute;
+        left: calc(1202 * var(--u));
+        top: calc(304 * var(--u));
+        font-family: 'Caveat', cursive;
+        font-size: calc(29 * var(--u));
+        line-height: 1.1;
+        font-weight: 600;
+        color: #08482D;
+        transform: rotate(16deg);
+        pointer-events: none;
+      }
+      .hero-note-wins svg {
+        position: absolute;
+        top: calc(52 * var(--u));
+        left: calc(-30 * var(--u));
+        width: calc(120 * var(--u));
+        height: calc(110 * var(--u));
+        overflow: visible;
+      }
+      .hero-note-free {
+        position: absolute;
+        left: calc(505 * var(--u));
+        top: calc(942 * var(--u));
+        font-family: 'Caveat', cursive;
+        font-size: calc(28 * var(--u));
+        font-weight: 600;
+        color: #08482D;
+        transform: rotate(24deg);
+        pointer-events: none;
+      }
+      .hero-note-free svg {
+        position: absolute;
+        top: calc(-12 * var(--u));
+        right: calc(-42 * var(--u));
+        width: calc(48 * var(--u));
+        height: calc(36 * var(--u));
+      }
+
+      /* Curved Carousel Container */
+      .hero-carousel-wrap {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: calc(500 * var(--u));
+        top: calc(470 * var(--u));
+        cursor: grab;
+        touch-action: pan-y;
+        z-index: 20;
+      }
+      .hero-carousel-wrap.grabbing { cursor: grabbing; }
+      .hero-card {
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        background: #11261d;
+        transform-origin: center center;
+        will-change: transform, clip-path;
+        box-shadow: 0 calc(12 * var(--u)) calc(30 * var(--u)) rgba(8, 72, 45, 0.14);
+      }
+      .hero-card-media {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      .hero-card-video, .hero-card-poster {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(5 * 100%);
+        height: calc(2 * 100%);
+        object-fit: cover;
+        pointer-events: none;
+      }
+      .hero-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(8,72,45,0.02) 40%, rgba(8,72,45,0.65) 100%);
+        pointer-events: none;
+      }
+      .hero-card-play {
+        position: absolute;
+        bottom: calc(14 * var(--u));
+        left: calc(14 * var(--u));
+        width: calc(28 * var(--u));
+        height: calc(28 * var(--u));
+        background: rgba(255, 255, 255, 0.28);
+        backdrop-filter: blur(8px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+      }
+      .hero-card-chip {
+        position: absolute;
+        bottom: calc(12 * var(--u));
+        left: calc(48 * var(--u));
+        right: calc(12 * var(--u));
+        height: calc(32 * var(--u));
+        background: rgba(245, 248, 239, 0.72);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        border-radius: calc(16 * var(--u));
+        display: flex;
+        align-items: center;
+        padding: 0 calc(8 * var(--u));
+        gap: calc(6 * var(--u));
+      }
+      .hero-chip-avatar {
+        width: calc(20 * var(--u));
+        height: calc(20 * var(--u));
+        border-radius: 50%;
+        background: #08482D;
+        color: #DAE7C7;
+        font-size: calc(10 * var(--u));
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .hero-chip-info {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+        overflow: hidden;
+      }
+      .hero-chip-name {
+        font-size: calc(10.5 * var(--u));
+        font-weight: 700;
+        color: #08482D;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .hero-chip-meta {
+        font-size: calc(8.5 * var(--u));
+        color: #385542;
+        white-space: nowrap;
+      }
+
+      /* Main CTA Button */
+      .hero-cta-box {
+        position: absolute;
+        left: calc(626 * var(--u));
+        top: calc(901 * var(--u));
+        width: calc(190 * var(--u));
+        height: calc(74 * var(--u));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 30;
+      }
+      .hero-cta-ring {
+        position: absolute;
+        inset: 0;
+        border: 2px dashed #08482D;
+        border-radius: 999px;
+        opacity: 0.75;
+      }
+      .hero-cta-btn {
+        width: calc(172 * var(--u));
+        height: calc(58 * var(--u));
+        background: #08482D;
+        color: #FFFFFF;
+        border-radius: 999px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: calc(14.5 * var(--u));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: calc(6 * var(--u));
+        white-space: nowrap;
+        box-shadow: 0 calc(8 * var(--u)) calc(20 * var(--u)) rgba(8, 72, 45, 0.28);
+        transition: transform 0.2s, background 0.2s;
+        z-index: 1;
+      }
+      .hero-cta-btn:hover {
+        background: #0b5a39;
+        transform: scale(1.02);
+      }
+
+      /* =====================================================
+         PART A: FILE 2 — MOSSLINE SCROLL FLY-IN (.story-sec)
+         ===================================================== */
+      .story-sec {
+        --ink: #10291a;
+        --ink2: #2c4434;
+        --mist: #e7ebe8;
+        --paper: #f6f7f4;
+        --lime: #c6f35c;
+        --lime2: #a9dd3a;
+        --glass: rgba(244, 247, 243, 0.16);
+        --line: rgba(255, 255, 255, 0.28);
+        --sans: 'Inter Tight', 'Inter', sans-serif;
+        --mono: 'JetBrains Mono', monospace;
+        position: relative;
+        background: var(--mist);
+        color: var(--ink);
+      }
+      /* Scroll track: only the pinned stage lives in here.
+         The white Features panel comes AFTER it so it can't cover the scene early. */
+      .story-track {
+        position: relative;
+        height: 640vh;
+      }
+      .story-stage {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        overflow: hidden;
+        background: #dfe3e0;
+      }
+      .story-cam {
+        position: absolute;
+        inset: -9% -3% -3%;
+        will-change: transform;
+      }
+      .story-cv {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .story-plate {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .story-mist {
+        position: absolute;
+        inset: -10%;
+        background-image:
+          radial-gradient(40% 30% at 20% 80%, rgba(255,255,255,0.55), transparent 70%),
+          radial-gradient(35% 25% at 85% 30%, rgba(255,255,255,0.4), transparent 70%);
+        animation: storyDrift 18s ease-in-out infinite alternate;
+        pointer-events: none;
+      }
+      @keyframes storyDrift {
+        from { transform: translate3d(0, 0, 0); }
+        to { transform: translate3d(4%, -2%, 0); }
+      }
+      .story-camF {
+        position: absolute;
+        inset: -9% -3% -3%;
+        pointer-events: none;
+        z-index: 5;
+        visibility: hidden;
+        -webkit-mask-image: linear-gradient(90deg, transparent 25%, #000 27.5%, #000 71.5%, transparent 74%);
+        mask-image: linear-gradient(90deg, transparent 25%, #000 27.5%, #000 71.5%, transparent 74%);
+      }
+      .story-camF img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      /* Rocks */
+      .story-rock {
+        position: absolute;
+        overflow: hidden;
+        z-index: 6;
+        pointer-events: none;
+      }
+      .story-rock .bob {
+        position: absolute;
+        inset: 0;
+      }
+      .story-rock img {
+        position: absolute;
+        max-width: none;
+      }
+      .story-rk1 {
+        left: 4%;
+        top: 13%;
+        width: 7.5vw;
+        aspect-ratio: 260 / 295;
+      }
+      .story-rk1 img {
+        width: calc(1200 / 260 * 100%);
+        left: calc(-30 / 260 * 100%);
+        top: calc(-200 / 295 * 100%);
+      }
+      .story-rk1 .bob {
+        animation: storyBob1 6s ease-in-out infinite alternate;
+      }
+      .story-rk3 {
+        left: 80%;
+        top: 58%;
+        width: 14vw;
+        aspect-ratio: 265 / 270;
+      }
+      .story-rk3 img {
+        width: calc(1200 / 265 * 100%);
+        left: calc(-895 / 265 * 100%);
+        top: calc(-240 / 270 * 100%);
+      }
+      .story-rk3 .bob {
+        animation: storyBob3 8.5s ease-in-out -3s infinite alternate;
+      }
+      @keyframes storyBob1 {
+        from { transform: translateY(-1.2%) rotate(-1.2deg); }
+        to { transform: translateY(1.6%) rotate(1.4deg); }
+      }
+      @keyframes storyBob3 {
+        from { transform: translateY(-1.4%) rotate(-1.5deg); }
+        to { transform: translateY(1.8%) rotate(1.5deg); }
+      }
+
+      /* Fog bank */
+      .story-fog {
+        position: absolute;
+        left: -8vw;
+        top: -6vh;
+        width: 56vw;
+        height: 60vh;
+        z-index: 3;
+        pointer-events: none;
+        visibility: hidden;
+        -webkit-mask-image: radial-gradient(ellipse 52% 48% at 46% 46%, #000 44%, rgba(0,0,0,0.7) 64%, transparent 100%);
+        mask-image: radial-gradient(ellipse 52% 48% at 46% 46%, #000 44%, rgba(0,0,0,0.7) 64%, transparent 100%);
+      }
+      .story-fog-f0 {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(60% 55% at 40% 45%, #d9dddd, #cfd4d4 60%, #c9cfcf);
+        filter: blur(10px);
+      }
+      .story-fog-f1, .story-fog-f2 {
+        position: absolute;
+        inset: -20%;
+        background-color: #cfd6d6;
+        filter: blur(12px);
+        opacity: 0.7;
+      }
+
+      /* Story Layers */
+      .story-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .story-layer > * { pointer-events: auto; }
+
+      /* Chip & Mono utilities */
+      .chip-lime {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 22px;
+        padding: 0 9px;
+        background: #c6f35c;
+        color: #10291a;
+        border-radius: 3px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .story-mono {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      /* L0: Hero Headline */
+      .story-hero-copy {
+        position: absolute;
+        top: 12vh;
+        left: 0;
+        right: 0;
+        padding: 0 16px;
+        text-align: center;
+        z-index: 4;
+      }
+      .story-hero-copy h1 {
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 500;
+        font-size: clamp(52px, 9.2vw, 150px);
+        line-height: 0.95;
+        letter-spacing: -0.045em;
+        margin-top: 18px;
+        color: #10291a;
+      }
+      .story-line-mask {
+        display: block;
+        overflow: hidden;
+        padding: 0.04em 0 0.16em;
+        margin-bottom: -0.1em;
+        white-space: nowrap;
+      }
+      .story-line-mask span {
+        display: inline-block;
+        transform: translateY(110%);
+      }
+      /* The rise plays when the scene scrolls into view (not at page load) */
+      .story-sec.in-view .story-line-mask span {
+        animation: storyRise 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s forwards;
+      }
+      @keyframes storyRise {
+        from { transform: translateY(105%); }
+        to { transform: translateY(0); }
+      }
+
+      /* L1: HUD, Caption & Hint */
+      .story-hud {
+        position: absolute;
+        left: 53.5%;
+        top: 62%;
+        z-index: 7;
+        pointer-events: none;
+      }
+      .story-crosshair {
+        position: absolute;
+        left: -44px;
+        top: 4px;
+        width: 22px;
+        height: 22px;
+      }
+      .story-crosshair::before, .story-crosshair::after {
+        content: '';
+        position: absolute;
+        background: rgba(255, 255, 255, 0.85);
+      }
+      .story-crosshair::before { left: 10px; top: 0; width: 2px; height: 22px; }
+      .story-crosshair::after { left: 0; top: 10px; width: 22px; height: 2px; }
+      .story-hud pre {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        line-height: 1.65;
+        color: #ffffff;
+        text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+        margin-top: 12px;
+        background: rgba(16, 41, 26, 0.4);
+        padding: 8px 12px;
+        border-radius: 4px;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .story-caption {
+        position: absolute;
+        left: 34px;
+        bottom: 34px;
+        padding-left: 16px;
+        border-left: 2px solid #c6f35c;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11.5px;
+        line-height: 1.75;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: #2c4434;
+        z-index: 7;
+      }
+      .story-scroll-hint {
+        position: absolute;
+        right: 34px;
+        bottom: 36px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        color: #2c4434;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 7;
+      }
+      .story-scroll-circle {
+        width: 20px;
+        height: 20px;
+        border: 1.3px solid #2c4434;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        animation: hintNudge 1.6s ease-in-out infinite;
+      }
+      @keyframes hintNudge {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(2px); }
+      }
+
+      /* L2: Vision */
+      .story-vision {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: min(820px, 90vw);
+        text-align: center;
+        color: #ffffff;
+        z-index: 8;
+        visibility: hidden;
+      }
+      .story-vision h2 {
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 500;
+        font-size: clamp(34px, 4.6vw, 70px);
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+        margin: 18px 0 20px;
+        text-shadow: 0 2px 40px rgba(10,30,15,0.55), 0 1px 3px rgba(10,30,15,0.3);
+      }
+      .story-vision p {
+        font-size: 16px;
+        line-height: 1.45;
+        text-shadow: 0 1px 14px rgba(10,30,15,0.7);
+        color: #f2f7f3;
+      }
+
+      /* L3: Accounting & Hotspots */
+      .story-acct {
+        position: absolute;
+        left: 34px;
+        top: 14vh;
+        width: min(560px, 86vw);
+        color: #10291a;
+        font-size: clamp(20px, 1.9vw, 29px);
+        line-height: 1.16;
+        letter-spacing: -0.02em;
+        text-shadow: 0 0 24px rgba(255, 255, 255, 0.8);
+        z-index: 8;
+        visibility: hidden;
+      }
+      .story-hotspot {
+        position: absolute;
+        z-index: 9;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        visibility: hidden;
+        transform-origin: 11px 50%;
+      }
+      .story-hotspot.flip {
+        flex-direction: row-reverse;
+        transform-origin: calc(100% - 11px) 50%;
+      }
+      #hs1 { left: 12%; top: 58%; }
+      #hs2 { left: 33%; top: 41%; }
+      #hs3 { right: calc(30% - 22px); top: 66%; }
+      #hs4 { right: calc(17% - 22px); top: 47%; }
+      .story-hotspot-dot {
+        width: 22px;
+        height: 22px;
+        background: #c6f35c;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        flex: none;
+        transition: transform 0.2s;
+        box-shadow: 0 0 0 0 rgba(198, 243, 92, 0.7);
+        animation: pulseShadow 2.4s infinite;
+      }
+      @keyframes pulseShadow {
+        0% { box-shadow: 0 0 0 0 rgba(198, 243, 92, 0.7); }
+        70% { box-shadow: 0 0 0 14px rgba(198, 243, 92, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(198, 243, 92, 0); }
+      }
+      .story-hotspot:hover .story-hotspot-dot { transform: scale(1.15); }
+      .story-hotspot-dot::before, .story-hotspot-dot::after {
+        content: '';
+        position: absolute;
+        background: #10291a;
+      }
+      .story-hotspot-dot::before { width: 10px; height: 1.4px; }
+      .story-hotspot-dot::after { width: 1.4px; height: 10px; }
+      .story-hotspot-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #10291a;
+        padding: 6px 9px;
+        border-radius: 4px;
+        background: rgba(246, 248, 245, 0.78);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+      .story-hotspot em {
+        font-style: normal;
+        color: #4f8a12;
+        font-weight: 600;
+        max-width: 0;
+        padding-left: 0;
+        opacity: 0;
+        overflow: hidden;
+        display: inline-block;
+        white-space: nowrap;
+        transition: max-width 0.45s ease, padding-left 0.45s ease, opacity 0.35s ease;
+      }
+      .story-hotspot.on em, .story-hotspot:hover em { max-width: 240px; padding-left: 8px; opacity: 1; }
+
+      /* L4: Station (Credibility, Carbon Card, Feature List) */
+      .story-cred {
+        position: absolute;
+        left: 34px;
+        top: 13vh;
+        max-width: 380px;
+        color: #10291a;
+        font-size: clamp(22px, 2vw, 30px);
+        line-height: 1.08;
+        letter-spacing: -0.025em;
+        text-shadow: 0 0 24px rgba(255, 255, 255, 0.8);
+        z-index: 8;
+        visibility: hidden;
+      }
+      .story-carbon-card {
+        position: absolute;
+        left: 38%;
+        top: 38vh;
+        width: 250px;
+        padding: 18px;
+        border-radius: 10px;
+        background: rgba(40, 58, 44, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        backdrop-filter: blur(16px) saturate(1.2);
+        -webkit-backdrop-filter: blur(16px) saturate(1.2);
+        color: #ffffff;
+        z-index: 8;
+        visibility: hidden;
+      }
+      .story-carbon-card h4 {
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.2;
+      }
+      .story-card-note {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        opacity: 0.7;
+        margin-top: 4px;
+      }
+      .story-card-num {
+        font-size: 46px;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        margin-top: 10px;
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+      }
+      .story-card-num span.unit {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 400;
+      }
+      .story-card-tag {
+        margin-left: auto;
+        align-self: center;
+        white-space: nowrap;
+        background: #c6f35c;
+        color: #10291a;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 600;
+      }
+      .story-card-sparkline {
+        margin-top: 12px;
+        width: 100%;
+        height: 70px;
+      }
+      .story-feats {
+        position: absolute;
+        right: 34px;
+        top: 30vh;
+        width: min(400px, 36vw);
+        padding: 6px 16px;
+        border-radius: 10px;
+        background: rgba(246, 248, 245, 0.65);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        z-index: 8;
+        visibility: hidden;
+      }
+      .story-feat-row {
+        display: grid;
+        grid-template-columns: 30px 1fr 16px;
+        gap: 8px;
+        align-items: center;
+        padding: 11px 0;
+        border-bottom: 1px solid rgba(16, 41, 26, 0.14);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: padding-left 0.3s, color 0.3s;
+      }
+      .story-feat-row:last-child { border-bottom: none; }
+      .story-feat-row:hover, .story-feat-row.on {
+        color: #4f8a12;
+        padding-left: 6px;
+      }
+      .story-feat-arrow {
+        transition: transform 0.3s;
+      }
+      .story-feat-row:hover .story-feat-arrow, .story-feat-row.on .story-feat-arrow {
+        transform: translateX(4px);
+      }
+      /* Story Progress Bar */
+      .story-prog {
+        position: absolute;
+        bottom: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 2px;
+        background: rgba(16, 41, 26, 0.18);
+        border-radius: 2px;
+        z-index: 10;
+        overflow: hidden;
+      }
+      .story-prog-bar {
+        width: 100%;
+        height: 100%;
+        background: #a9dd3a;
+        transform-origin: left;
+        transform: scaleX(0);
+      }
+
+      /* Solutions Section (#sol) */
+      .story-sol {
+        position: relative;
+        z-index: 12;
+        margin-top: -30vh;
+        background: #FFFFFF;
+        border-radius: 22px 22px 0 0;
+        padding: 70px 34px 90px;
+        box-shadow: 0 -30px 60px rgba(16, 41, 26, 0.12);
+      }
+      .story-sol-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+      .story-sol-title {
+        font-family: 'Inter Tight', sans-serif;
+        font-weight: 500;
+        font-size: clamp(34px, 3.9vw, 58px);
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+        max-width: 640px;
+        margin-top: 20px;
+        color: #10291a;
+      }
+      .story-sol-desc {
+        font-size: 15px;
+        line-height: 1.5;
+        max-width: 360px;
+        color: #4a5a4f;
+      }
+      .story-sol-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 54px;
+      }
+      .story-sol-card {
+        height: 440px;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        background: #1b3122;
+        color: #ffffff;
+        cursor: pointer;
+        transition: transform 0.25s ease-out;
+        will-change: transform;
+      }
+      .story-sol-card-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .story-sol-card:hover .story-sol-card-bg {
+        transform: scale(1.07);
+      }
+      .story-sol-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(10,25,15,0.45), transparent 35%, transparent 55%, rgba(10,25,15,0.75));
+      }
+      .story-sol-card-content {
+        position: absolute;
+        inset: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .story-sol-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .story-sol-card-top span {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .story-sol-card-btn {
+        width: 28px;
+        height: 28px;
+        background: #c6f35c;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #10291a;
+        font-size: 14px;
+        transition: transform 0.3s;
+      }
+      .story-sol-card:hover .story-sol-card-btn {
+        transform: rotate(-45deg);
+      }
+      .story-sol-card h3 {
+        font-family: 'Inter Tight', sans-serif;
+        font-size: 25px;
+        font-weight: 500;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
+      .story-sol-card p {
+        font-size: 13.5px;
+        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.85);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.6s ease;
+        margin-top: 8px;
+      }
+      .story-sol-card:hover p { max-height: 80px; }
+      /* Touch screens have no hover, so always show the description */
+      @media (hover: none) {
+        .story-sol-card p { max-height: 80px; }
+      }
+
+      /* Stats */
+      .story-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        margin-top: 60px;
+        border-top: 1px solid #e0e5e0;
+      }
+      .story-stat-cell {
+        padding-top: 22px;
+      }
+      .story-stat-num {
+        font-family: 'Inter Tight', sans-serif;
+        font-size: 44px;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        color: #10291a;
+      }
+      .story-stat-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #6a7a6f;
+        margin-top: 6px;
+      }
+
+      /* =====================================================
+         PART A: FILE 3 — DRIFTBAR MEADOW FOOTER (.foot-sec)
+         ===================================================== */
+      .foot-sec {
+        --paper: #f1f1ee;
+        --ink: #0c0c0c;
+        --body: #6f6f6c;
+        --muted: #9c9c98;
+        --wordmark: #efefeb;
+        --mist: #e2e3f1;
+        --font: 'Inter', system-ui, -apple-system, sans-serif;
+        --u: min(100vw / 1440, 100vh / 672);
+        position: relative;
+        height: 100vh;
+        min-height: calc(672 * var(--u));
+        background: var(--paper);
+        overflow: hidden;
+        isolation: isolate;
+        font-family: var(--font);
+        color: var(--ink);
+      }
+      .foot-stage {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .foot-video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 100%;
+        transform: translateY(9%);
+      }
+      .foot-stage::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, var(--paper) 0%, rgba(241, 241, 238, 0.96) 26%, rgba(241, 241, 238, 0.72) 44%, rgba(241, 241, 238, 0) 70%);
+      }
+      .foot-wordmark {
+        position: absolute;
+        left: 50%;
+        bottom: calc(-2 * var(--u));
+        transform: translateX(-50%);
+        z-index: 1;
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        font-size: calc(390 * var(--u));
+        font-weight: 600;
+        line-height: 0.74;
+        letter-spacing: -0.045em;
+        white-space: nowrap;
+        pointer-events: none;
+        user-select: none;
+        color: rgba(232, 234, 250, 0.4);
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.78), rgba(214, 218, 246, 0.36) 48%, rgba(255, 255, 255, 0.62));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 calc(-1 * var(--u)) 0 rgba(255, 255, 255, 0.55)) drop-shadow(0 0 calc(18 * var(--u)) rgba(190, 200, 255, 0.45));
+      }
+      .foot-fog {
+        position: absolute;
+        inset: auto 0 0;
+        z-index: 2;
+        height: 17%;
+        pointer-events: none;
+        background: linear-gradient(to top, var(--mist) 0%, rgba(226, 227, 241, 0.6) 30%, rgba(226, 227, 241, 0) 100%);
+      }
+      .foot-content {
+        position: relative;
+        z-index: 3;
+        display: grid;
+        grid-template-columns: calc(440 * var(--u)) calc(240 * var(--u)) calc(240 * var(--u)) 1fr;
+        align-items: start;
+        width: calc(1440 * var(--u));
+        margin: 0 auto;
+        padding: calc(86 * var(--u)) calc(100 * var(--u)) 0 calc(160 * var(--u));
+      }
+      .foot-brand-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: calc(10 * var(--u));
+        font-size: calc(17 * var(--u));
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: #08482D;
+      }
+      .foot-brand-mark {
+        width: calc(30 * var(--u));
+        height: calc(30 * var(--u));
+        border-radius: calc(8 * var(--u));
+        background: linear-gradient(to bottom, #174f36, #08482D);
+        box-shadow: 0 calc(1 * var(--u)) calc(2 * var(--u)) rgba(0,0,0,0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #DAE7C7;
+      }
+      .foot-brand-title {
+        margin-top: calc(19 * var(--u));
+        font-size: calc(20 * var(--u));
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: -0.045em;
+        color: #101410;
+      }
+      .foot-brand-text {
+        max-width: calc(412 * var(--u));
+        margin-top: calc(18 * var(--u));
+        color: var(--body);
+        font-size: calc(13.7 * var(--u));
+        line-height: 1.43;
+        letter-spacing: -0.012em;
+      }
+      .foot-brand-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: calc(6 * var(--u));
+        height: calc(32.5 * var(--u));
+        margin-top: calc(20 * var(--u));
+        padding: 0 calc(16 * var(--u)) 0 calc(15 * var(--u));
+        border-radius: calc(7 * var(--u));
+        background: #08482D;
+        color: #ffffff;
+        font-size: calc(11.8 * var(--u));
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        transition: background 0.2s, transform 0.2s;
+      }
+      .foot-brand-cta:hover { background: #0b5a39; transform: translateY(-1px); }
+      .foot-brand-copy {
+        margin-top: calc(23 * var(--u));
+        color: var(--muted);
+        font-size: calc(12.2 * var(--u));
+        letter-spacing: 0.01em;
+      }
+      .foot-brand-by {
+        display: flex;
+        align-items: center;
+        gap: calc(5 * var(--u));
+        margin-top: calc(21 * var(--u));
+        font-size: calc(11.8 * var(--u));
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        color: #333333;
+      }
+      .foot-status {
+        display: flex;
+        flex-wrap: wrap;
+        gap: calc(8 * var(--u));
+        margin-top: calc(16 * var(--u));
+        list-style: none;
+      }
+      .foot-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: calc(6 * var(--u));
+        height: calc(25 * var(--u));
+        padding: 0 calc(10 * var(--u));
+        border: 1px solid rgba(12, 12, 12, 0.12);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.55);
+        font-size: calc(10.8 * var(--u));
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        color: #101410;
+      }
+      .foot-chip-dot {
+        width: calc(6 * var(--u));
+        height: calc(6 * var(--u));
+        background: #2fb36a;
+        border-radius: 50%;
+        box-shadow: 0 0 0 calc(2.5 * var(--u)) rgba(47, 179, 106, 0.18);
+      }
+      .foot-col-title {
+        font-size: calc(16 * var(--u));
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.045em;
+        color: #101410;
+      }
+      .foot-col-list {
+        display: grid;
+        gap: calc(20.5 * var(--u));
+        margin-top: calc(24 * var(--u));
+        font-size: calc(13.7 * var(--u));
+        line-height: 1.24;
+        letter-spacing: 0.022em;
+        color: #161616;
+        list-style: none;
+      }
+      .foot-col-menu .foot-col-list {
+        gap: calc(15 * var(--u));
+        margin-top: calc(21 * var(--u));
+        font-weight: 500;
+        letter-spacing: -0.025em;
+        color: var(--ink);
+      }
+      .foot-col-list a { transition: opacity 0.2s; }
+      .foot-col-list a:hover { opacity: 0.55; }
+
+      /* Responsive Rules */
+      @media (min-width: 821px) and (max-width: 1180px) {
+        /* keep the score card and feature list from colliding on tablets / small laptops */
+        .story-carbon-card { left: 34px; top: auto; bottom: 12vh; }
+        .story-feats { width: min(400px, 46vw); }
+      }
+      @media (max-width: 820px) {
+        .hero-sec { --u: 1px; height: auto; min-height: 720px; padding: 20px 0 60px; }
+        .hero-stage { position: relative; top: 0; left: 0; transform: none; width: 100%; height: auto; }
+        .hero-nav { position: relative; top: 0; padding: 10px 20px; justify-content: space-between; }
+        .hero-logo { position: static; font-size: 20px; }
+        .hero-logo-mark { width: 28px; height: 28px; }
+        .hero-links, .hero-btn-login { display: none; }
+        .hero-btn-signup { position: static; width: auto; padding: 0 16px; height: 36px; font-size: 13px; }
+        .hero-badge { position: relative; left: auto; top: auto; margin: 30px auto 14px; width: fit-content; padding: 0 16px; height: 32px; font-size: 13px; }
+        .hero-headline { position: relative; top: auto; font-size: clamp(38px, 9vw, 56px); line-height: 1.05; padding: 0 16px; }
+        .hero-subline { position: relative; top: auto; font-size: 15px; line-height: 1.5; padding: 14px 20px 0; }
+        .hero-doodle-slashes, .hero-note-wins { display: none; }
+        .hero-carousel-wrap { position: relative; top: auto; height: calc(400 * var(--u)); margin: 20px 0 10px; }
+        .hero-subline br { display: none; }
+        .hero-cta-box { position: relative; left: auto; top: auto; width: fit-content; height: auto; padding: 8px; margin: 10px auto; }
+        .hero-cta-btn { width: auto; height: 52px; padding: 0 24px; font-size: 16px; white-space: nowrap; }
+        .hero-note-free { display: none; }
+
+        /* Story Section mobile */
+        .story-hero-copy { top: 12.5vh; }
+        .story-hero-copy h1 { font-size: clamp(44px, 12vw, 72px); line-height: 1.02; }
+        .story-vision h2 { font-size: clamp(26px, 7.4vw, 38px); }
+        .story-vision p { font-size: 15px; }
+        .story-line-mask { white-space: normal; }
+        .story-rk1 { width: 16vw; }
+        .story-rk3 { width: 30vw; top: 70%; }
+        .story-hud { left: 50%; top: 66%; translate: -50% 0; }
+        .story-acct { left: 18px; top: 11vh; font-size: 19px; }
+        #hs1 { left: 6%; top: 57%; }
+        #hs2 { left: 6%; top: 45%; }
+        #hs3 { right: calc(6% - 0px); top: 67%; }
+        #hs4 { right: calc(6% - 0px); top: 52%; }
+        .story-caption { left: 18px; right: 18px; bottom: 70px; }
+        .story-scroll-hint { right: 18px; bottom: 24px; }
+        .story-cred { left: 18px; top: 11vh; max-width: 80vw; }
+        .story-carbon-card { left: 18px; top: auto; bottom: 5vh; width: 210px; }
+        .story-feats { left: 18px; right: 18px; top: 30vh; bottom: auto; width: auto; padding: 4px 12px; }
+        .story-feat-row { font-size: 10px; letter-spacing: 0.08em; }
+        .story-sol { padding: 50px 18px 70px; margin-top: -15vh; }
+        .story-sol-grid { grid-template-columns: 1fr; }
+        .story-sol-card { height: 340px; }
+        .story-stats { grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        /* Footer mobile */
+        .foot-sec { height: auto; min-height: 100vh; --u: 1px; padding-bottom: calc(24vw + 40px); }
+        .foot-content { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 20px; width: 100%; padding: 40px 20px 0; }
+        .foot-brand { grid-column: 1 / -1; }
+        .foot-wordmark { bottom: 10px; }
+      }
+
+      /* Reduced Motion */
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- =====================================================
+         PART A: 1. HERO SECTION (REELMARK ADAPTED TO CAMPUSLY)
+         ===================================================== -->
+    <section class="hero-sec" id="hero">
+      <div class="hero-stage">
+        <!-- Top Navigation -->
+        <header class="hero-nav">
+          <a href="#hero" class="hero-logo" aria-label="Campusly home">
+            <span class="hero-logo-mark">
+              <!-- Leaf / Chat Mark -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21a9 9 0 0 0 9-9c0-4.97-4.03-9-9-9A9 9 0 0 0 3 12c0 1.61.42 3.12 1.16 4.44L3 21l4.74-1.12A8.95 8.95 0 0 0 12 21z"></path>
+                <path d="M12 8c2.2 0 4 1.8 4 4 0 2.5-3 5-4 5s-4-2.5-4-5c0-2.2 1.8-4 4-4z"></path>
+              </svg>
+            </span>
+            Campusly
+          </a>
+
+          <ul class="hero-links">
+            <li><a href="#sol">Features</a></li>
+            <li><a href="#sol">Groups</a></li>
+            <li><a href="#sol">Events</a></li>
+            <li><a href="#story">Achievements</a></li>
+            <li><a href="#footer">Contact</a></li>
+          </ul>
+
+          <button type="button" class="hero-btn-login" id="heroLoginBtn">Log in</button>
+          <button type="button" class="hero-btn-signup" id="heroSignUpBtn">Sign up</button>
+        </header>
+
+        <!-- Badge -->
+        <div class="hero-badge">Made for VIT Chennai students</div>
+
+        <!-- Headline -->
+        <h1 class="hero-headline">
+          Find Your People
+          <span class="hero-headline-line2">at VIT Chennai</span>
+        </h1>
+
+        <!-- Subline -->
+        <p class="hero-subline">
+          Verified profiles, real campus details and private chat,<br />
+          all in one place. Meet teammates, join clubs,<br />
+          and show off your wins.
+        </p>
+
+        <!-- Doodles & Notes -->
+        <div class="hero-doodle-slashes" aria-hidden="true">//</div>
+
+        <div class="hero-note-wins" aria-hidden="true">
+          Show your<br />wins
+          <svg viewBox="0 0 120 110" fill="none" stroke="#08482D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 20 10 C 15 45, 45 80, 95 95" />
+            <path d="M 82 92 L 95 95 L 90 82" />
+          </svg>
+        </div>
+
+        <div class="hero-note-free" aria-hidden="true">
+          Free for VIT
+          <svg viewBox="0 0 50 40" fill="none" stroke="#08482D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 10 30 C 25 28, 38 20, 42 10" />
+            <path d="M 33 10 L 42 10 L 41 20" />
+          </svg>
+        </div>
+
+        <!-- Curved Draggable Carousel -->
+        <div class="hero-carousel-wrap" id="heroCarousel" aria-label="Campus stories and student profiles carousel">
+          <!-- 10 Video Cards will be initialized via JavaScript -->
+        </div>
+
+        <!-- Main CTA Button -->
+        <div class="hero-cta-box">
+          <div class="hero-cta-ring"></div>
+          <button type="button" class="hero-cta-btn" id="heroMainCtaBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            Join with VIT email
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         PART A: 2. SCROLL STORY (MOSSLINE ADAPTED TO CAMPUSLY)
+         ===================================================== -->
+    <section class="story-sec" id="story">
+      <div class="story-track" id="storyTrack">
+      <div class="story-stage">
+        <!-- 1. Background Camera Box -->
+        <div class="story-cam" id="storyCam">
+          <canvas class="story-cv" id="storyCanvas"></canvas>
+          <img class="story-plate" id="storyPlate"
+               src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261106_031618_8ce6dca1-972d-429d-8d13-bf0691c37848.png&w=2400&q=88"
+               alt="Campus floating island landscape" />
+          <div class="story-mist"></div>
+        </div>
+
+        <!-- 2. Hidden Video for Frame Cache -->
+        <video id="storyVideo" style="position:absolute; width:2px; height:2px; opacity:0; pointer-events:none;"
+               muted playsinline preload="auto" crossorigin="anonymous"
+               src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261106_025717_906b686d-9a9a-4dea-bab4-ae2454f8390e.mp4"></video>
+
+        <!-- 3. Fog Bank -->
+        <div class="story-fog" id="storyFog">
+          <div class="story-fog-f0"></div>
+          <div class="story-fog-f1"></div>
+          <div class="story-fog-f2"></div>
+        </div>
+
+        <!-- 4. Layer L0: Hero Headline -->
+        <div class="story-layer" id="storyL0">
+          <div class="story-hero-copy" id="storyHeroCopy">
+            <span class="chip-lime">Campus intelligence</span>
+            <h1>
+              <span class="story-line-mask">
+                <span>Meet Your Campus</span>
+              </span>
+            </h1>
+          </div>
+        </div>
+
+        <!-- 5. Front Cut-out for Fern-over-Headline -->
+        <div class="story-camF" id="storyCamF">
+          <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261106_031657_baaa3380-5ece-482a-a623-a1838fd7653c.png&w=2400&q=90"
+               alt="Floating island foreground cut-out" />
+        </div>
+
+        <!-- 6. Floating Rocks -->
+        <div class="story-rock story-rk1" id="storyRk1" data-x="-0.3" data-y="-0.6" data-d="1.3">
+          <div class="bob">
+            <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261106_025635_82593f6a-1cf7-41c1-94ac-96fb89ebfd1a.png&w=2400&q=85" alt="Moss rock" />
+          </div>
+        </div>
+        <div class="story-rock story-rk3" id="storyRk3" data-x="1" data-y="0.55" data-d="1.8">
+          <div class="bob">
+            <img src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261106_025635_82593f6a-1cf7-41c1-94ac-96fb89ebfd1a.png&w=2400&q=85" alt="Moss rock" />
+          </div>
+        </div>
+
+        <!-- 7. Layer L1: HUD, Caption & Scroll Hint -->
+        <div class="story-layer" id="storyL1">
+          <div class="story-hud" id="storyHud">
+            <div class="story-crosshair" aria-hidden="true"></div>
+            <span class="chip-lime">Vellore Institute · Chennai</span>
+            <pre>BLOCK C
+2 NEW REQUESTS
+14 ONLINE</pre>
+          </div>
+          <div class="story-caption" id="storyCaption">
+            Real campus connections.<br />
+            Verified by VIT email.<br />
+            Built by students, for students.
+          </div>
+          <div class="story-scroll-hint" id="storyHint">
+            SCROLL TO EXPLORE
+            <span class="story-scroll-circle">↓</span>
+          </div>
+        </div>
+
+        <!-- 8. Layer L2: Vision Statement -->
+        <div class="story-layer" id="storyL2">
+          <div class="story-vision" id="storyVision">
+            <span class="chip-lime">Why Campusly</span>
+            <h2 id="storyVisionH2">
+              <span class="word">From</span> <span class="word">Random</span> <span class="word">Scrolling</span> <span class="word">to</span><br />
+              <span class="word">Real</span> <span class="word">Campus</span> <span class="word">Connections</span><br />
+              <span class="word">in</span> <span class="word">One</span> <span class="word">Place</span>
+            </h2>
+            <p>A social app made only for VIT Chennai, with no fake accounts and no strangers.</p>
+          </div>
+        </div>
+
+        <!-- 9. Layer L3: Accounting & 4 Hotspots -->
+        <div class="story-layer" id="storyL3">
+          <p class="story-acct" id="storyAcct">
+            Every profile carries real campus details, from batch and branch to hostel block, so you find the right people, not just any people.
+          </p>
+
+          <div class="story-hotspot" id="hs1">
+            <div class="story-hotspot-dot"></div>
+            <div class="story-hotspot-label">Verified <em>VIT email only</em></div>
+          </div>
+          <div class="story-hotspot" id="hs2">
+            <div class="story-hotspot-dot"></div>
+            <div class="story-hotspot-label">Profile <em>Batch · Branch · Hostel</em></div>
+          </div>
+          <div class="story-hotspot flip" id="hs3">
+            <div class="story-hotspot-dot"></div>
+            <div class="story-hotspot-label">Suggestions <em>92% vibe match</em></div>
+          </div>
+          <div class="story-hotspot flip" id="hs4">
+            <div class="story-hotspot-dot"></div>
+            <div class="story-hotspot-label">Connect first <em>Request, then chat</em></div>
+          </div>
+        </div>
+
+        <!-- 10. Layer L4: Station (Record, Carbon Card, Feature list) -->
+        <div class="story-layer" id="storyL4">
+          <div class="story-cred" id="storyCred">
+            <span class="chip-lime" style="margin-bottom: 12px;">✕ Your campus record</span>
+            <h2>Your achievements, on the record</h2>
+          </div>
+
+          <div class="story-carbon-card" id="storyCarbonCard">
+            <h4>Achievement score</h4>
+            <div class="story-card-note">This semester</div>
+            <div class="story-card-num"><span id="storyScoreNum">0</span><span class="unit">pts</span><span class="story-card-tag">+3 this week</span></div>
+            <svg class="story-card-sparkline" viewBox="0 0 220 70">
+              <polyline id="sparklinePoly" fill="none" stroke="#c6f35c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        points="0,60 30,55 60,57 90,44 120,46 150,30 180,24 214,10" />
+              <g id="sparkDots" style="opacity:0">
+                <circle cx="90" cy="44" r="2.8" fill="#ffffff" />
+                <circle cx="150" cy="30" r="2.8" fill="#ffffff" />
+                <circle cx="214" cy="10" r="3.8" fill="#c6f35c" />
+              </g>
+            </svg>
+            <div class="story-card-note" style="margin-top: 8px;">Q1 · Q2 · Q3 · Q4</div>
+          </div>
+
+          <div class="story-feats" id="storyFeats">
+            <div class="story-feat-row"><span>01</span><span>Chat with files & voice notes</span><span class="story-feat-arrow">→</span></div>
+            <div class="story-feat-row"><span>02</span><span>Edit or unsend for 10 minutes</span><span class="story-feat-arrow">→</span></div>
+            <div class="story-feat-row"><span>03</span><span>Private and public groups</span><span class="story-feat-arrow">→</span></div>
+            <div class="story-feat-row"><span>04</span><span>Find a hackathon teammate</span><span class="story-feat-arrow">→</span></div>
+            <div class="story-feat-row"><span>05</span><span>Events board, study rooms, senior connect</span><span class="story-feat-arrow">→</span></div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="story-prog">
+          <div class="story-prog-bar" id="storyProgBar"></div>
+        </div>
+      </div>
+      </div><!-- /story-track -->
+
+      <!-- Solutions Section (#sol) -->
+      <div class="story-sol" id="sol">
+        <div class="story-sol-head">
+          <div>
+            <span class="chip-lime">Features</span>
+            <h2 class="story-sol-title">Everything VIT students actually need</h2>
+          </div>
+          <p class="story-sol-desc">
+            Direct connections, verified student profiles, shared study rooms, and campus updates organized into one focused experience.
+          </p>
+        </div>
+
+        <div class="story-sol-grid">
+          <!-- Card 1 -->
+          <div class="story-sol-card" data-tilt>
+            <div class="story-sol-card-bg" style="background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261106_025630_9a37a1e0-2547-4973-8160-c75205993914.png&w=1400&q=82'); background-position: 22% 70%; background-size: 260%;"></div>
+            <div class="story-sol-card-overlay"></div>
+            <div class="story-sol-card-content">
+              <div class="story-sol-card-top">
+                <span>[Chat and groups]</span>
+                <div class="story-sol-card-btn">→</div>
+              </div>
+              <div>
+                <h3>Talk like it's your own place</h3>
+                <p>Private groups with friends, public groups for clubs, hostels and subjects.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="story-sol-card" data-tilt>
+            <div class="story-sol-card-bg" style="background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261106_025545_b003e5cc-e68f-4fee-b686-c217a5d81eea.png&w=1400&q=82'); background-position: 50% 50%; background-size: 190%;"></div>
+            <div class="story-sol-card-overlay"></div>
+            <div class="story-sol-card-content">
+              <div class="story-sol-card-top">
+                <span>[Teammates and events]</span>
+                <div class="story-sol-card-btn">→</div>
+              </div>
+              <div>
+                <h3>Find your hackathon team</h3>
+                <p>Post what you need, get skill-based matches, and tap Going on campus events.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="story-sol-card" data-tilt>
+            <div class="story-sol-card-bg" style="background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261106_025630_9a37a1e0-2547-4973-8160-c75205993914.png&w=1400&q=82'); background-position: 62% 30%; background-size: 230%;"></div>
+            <div class="story-sol-card-overlay"></div>
+            <div class="story-sol-card-content">
+              <div class="story-sol-card-top">
+                <span>[Study and seniors]</span>
+                <div class="story-sol-card-btn">→</div>
+              </div>
+              <div>
+                <h3>Study rooms & senior connect</h3>
+                <p>Join exam study rooms and ask seniors about placements and projects.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Count-up Stats -->
+        <div class="story-stats" id="storyStats">
+          <div class="story-stat-cell">
+            <div class="story-stat-num" data-target="100" data-suffix="%">0%</div>
+            <div class="story-stat-label">VIT-verified</div>
+          </div>
+          <div class="story-stat-cell">
+            <div class="story-stat-num" data-target="10">0</div>
+            <div class="story-stat-label">Min to unsend</div>
+          </div>
+          <div class="story-stat-cell">
+            <div class="story-stat-num" data-target="2">0</div>
+            <div class="story-stat-label">Group types</div>
+          </div>
+          <div class="story-stat-cell">
+            <div class="story-stat-num" data-target="0">0</div>
+            <div class="story-stat-label">Strangers</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         PART A: 3. DRIFTBAR MEADOW FOOTER (SCOPED AS .foot-sec)
+         ===================================================== -->
+    <footer class="foot-sec" id="footer">
+      <div class="foot-stage" aria-hidden="true">
+        <video class="foot-video"
+               src="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4d01c727-d9c5-47c8-a778-35a451ffd39f.mp4"
+               poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261014_121838_c97d0940-f430-4304-8573-4f47ee44f447.png"
+               autoplay muted loop playsinline preload="auto"></video>
+      </div>
+
+      <!-- Giant Frosted-Glass Wordmark -->
+      <p class="foot-wordmark" aria-hidden="true">Campusly</p>
+
+      <div class="foot-fog" aria-hidden="true"></div>
+
+      <!-- Footer Content -->
+      <div class="foot-content">
+        <div class="foot-brand">
+          <a href="#hero" class="foot-brand-logo" aria-label="Campusly home">
+            <span class="foot-brand-mark">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+                <path d="M12 21a9 9 0 0 0 9-9c0-4.97-4.03-9-9-9A9 9 0 0 0 3 12c0 1.61.42 3.12 1.16 4.44L3 21l4.74-1.12A8.95 8.95 0 0 0 12 21z"></path>
+              </svg>
+            </span>
+            Campusly
+          </a>
+
+          <h2 class="foot-brand-title">The calm place for VIT Chennai</h2>
+          <p class="foot-brand-text">
+            Campusly brings chat, groups, events, teammates, study rooms and campus notices into one calm space made only for VIT Chennai students.
+          </p>
+
+          <a href="/app.html#/signup" class="foot-brand-cta" id="footerCtaBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Join with VIT email
+          </a>
+
+          <p class="foot-brand-copy">© 2026 Campusly - Made at VIT Chennai.</p>
+
+          <div class="foot-brand-by">
+            Built with <span style="color:#2563eb;">💙</span> by Campusly Team
+          </div>
+
+          <ul class="foot-status" aria-label="Campusly status">
+            <li class="foot-chip">
+              <span class="foot-chip-dot" aria-hidden="true"></span>
+              Verified VIT students
+            </li>
+            <li class="foot-chip">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11a8 8 0 1 0-2.3 5.7" /><path d="M20 4v7h-7" /></svg>
+              Beta · v0.1
+            </li>
+            <li class="foot-chip">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-2.9-5.4 2.9 1.1-6L3.2 9.4l6.1-.8Z" /></svg>
+              Free for VIT
+            </li>
+          </ul>
+        </div>
+
+        <nav class="foot-col foot-col-menu" aria-label="Menu">
+          <h3 class="foot-col-title">Menu</h3>
+          <ul class="foot-col-list">
+            <li><a href="#sol">Features</a></li>
+            <li><a href="#sol">Groups</a></li>
+            <li><a href="#sol">Events</a></li>
+            <li><a href="#story">Achievements</a></li>
+            <li><a href="#footer">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="foot-col" aria-label="Essentials">
+          <h3 class="foot-col-title">Essentials</h3>
+          <ul class="foot-col-list">
+            <li><a href="#hero">Support</a></li>
+            <li><a href="#hero">Privacy notice</a></li>
+            <li><a href="#hero">Community guidelines</a></li>
+            <li><a href="#hero">Report a problem</a></li>
+          </ul>
+        </nav>
+
+        <nav class="foot-col" aria-label="From our team">
+          <h3 class="foot-col-title">From our team</h3>
+          <ul class="foot-col-list">
+            <li><a href="#hero">Campus news</a></li>
+            <li><a href="#hero">Study rooms</a></li>
+            <li><a href="#hero">Senior connect</a></li>
+            <li><a href="#hero">Lost and found</a></li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+
+    <!-- =====================================================
+         SCRIPTS: CURVED CAROUSEL + PINNED SCROLL STORY + SCRUB
+         ===================================================== -->
+    <script>
+      (function() {
+        // ----------------------------------------------------
+        // 1. REELMARK CURVED CAROUSEL (FILE 1 EXACT ALGORITHM)
+        // ----------------------------------------------------
+        const mockProfiles = [
+          { name: "Aarav Sharma", tag: "CSE · 2nd yr", tile: 0 },
+          { name: "Sneha Reddy", tag: "ECE · 3rd yr", tile: 1 },
+          { name: "Rohan V.", tag: "SCOPE · 4th yr", tile: 2 },
+          { name: "Ananya Iyer", tag: "ECM · 2nd yr", tile: 3 },
+          { name: "Devansh Roy", tag: "Mech · 3rd yr", tile: 4 },
+          { name: "Kavya Menon", tag: "Biotech · 1st yr", tile: 5 },
+          { name: "Siddharth Jain", tag: "AI/ML · 2nd yr", tile: 6 },
+          { name: "Pooja Patel", tag: "Civil · 4th yr", tile: 7 },
+          { name: "Varun Nair", tag: "SENSE · 3rd yr", tile: 8 },
+          { name: "Meera Krishnan", tag: "Data Sci · 2nd yr", tile: 9 }
+        ];
+
+        const carouselWrap = document.getElementById('heroCarousel');
+        const numCards = 10;
+        const cards = [];
+        const videoSrc = "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/04fd3d5f-99d7-476e-98a4-46c08518ffb3.mp4";
+        const posterSrc = "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/b7ebb74a-8c8a-4f7e-8f80-55e2d74ecd05.webp";
+
+        // Create cards
+        for (let i = 0; i < numCards; i++) {
+          const card = document.createElement('div');
+          card.className = 'hero-card';
+
+          const col = i % 5;
+          const row = Math.floor(i / 5);
+
+          const prof = mockProfiles[i];
+          const initial = prof.name.charAt(0);
+
+          card.innerHTML = `
+            <div class="hero-card-media">
+              <img class="hero-card-poster" src="${posterSrc}" alt="Reel clip" style="left: -${col * 100}%; top: -${row * 100}%;" />
+              <video class="hero-card-video" src="${videoSrc}" autoplay muted loop playsinline preload="auto" style="left: -${col * 100}%; top: -${row * 100}%;"></video>
+              <div class="hero-card-overlay"></div>
+              <div class="hero-card-play">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21"></polygon></svg>
+              </div>
+              <div class="hero-card-chip">
+                <div class="hero-chip-avatar">${initial}</div>
+                <div class="hero-chip-info">
+                  <span class="hero-chip-name">${prof.name}</span>
+                  <span class="hero-chip-meta">${prof.tag}</span>
+                </div>
+              </div>
+            </div>
+          `;
+          carouselWrap.appendChild(card);
+          cards.push({ el: card, index: i });
+        }
+
+        // Responsive scale: one source of truth for CSS (--u) and the JS carousel maths
+        const heroSec = document.getElementById('hero');
+        const MOBILE_BP = 820;
+        let U = 1;        // px per design unit
+        let CX = 720;     // carousel centre-x in px, relative to the carousel box
+        let YOFF = 470;   // design-space y of the carousel box top
+        function layoutMetrics() {
+          const vw = document.documentElement.clientWidth;
+          const vh = window.innerHeight;
+          if (vw <= MOBILE_BP) {
+            heroSec.style.removeProperty('--u');
+            U = Math.max(0.55, Math.min(vw / 560, 0.95));
+            YOFF = 487;
+            carouselWrap.style.setProperty('--u', U + 'px');
+          } else {
+            U = Math.min(vw / 1440, vh / 1080);
+            YOFF = 470;
+            heroSec.style.setProperty('--u', U + 'px');
+            carouselWrap.style.removeProperty('--u');
+          }
+          CX = carouselWrap.clientWidth / 2;
+        }
+        layoutMetrics();
+        window.addEventListener('resize', layoutMetrics);
+
+        // Only animate (and decode video) while the hero is on screen
+        let heroVisible = true;
+        const heroVideos = carouselWrap.querySelectorAll('video');
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver((entries) => {
+            heroVisible = entries[0].isIntersecting;
+            heroVideos.forEach((v) => { if (heroVisible) v.play().catch(() => {}); else v.pause(); });
+          }, { threshold: 0 }).observe(heroSec);
+        }
+
+        // Carousel Physics & Motion
+        let scrollOffset = 0;
+        let isDragging = false;
+        let startX = 0;
+        let lastX = 0;
+        let velocity = 0;
+        let lastTime = performance.now();
+        const baseSpeed = 50; // 50 units per second
+
+        function updateCarousel(dt) {
+          const u = U;
+          const totalWidth = numCards * 196;
+
+          if (!isDragging) {
+            velocity *= Math.pow(0.05, dt); // decays 95% per second
+            if (Math.abs(velocity) < 0.1) velocity = 0;
+            scrollOffset += (baseSpeed + velocity) * dt;
+          }
+
+          cards.forEach((c) => {
+            let unpushedOffset = ((c.index * 196 - scrollOffset) % totalWidth + totalWidth) % totalWidth;
+            if (unpushedOffset > totalWidth / 2) unpushedOffset -= totalWidth;
+
+            const t = unpushedOffset;
+            const x = 720 + t * (1 + 0.083 * Math.pow(t / 706, 2));
+            const d = Math.abs(x - 720) / 706;
+
+            const cardW = 170 + 48 * Math.pow(d, 2);
+            const yCenter = 687 - 12 * Math.pow(d, 2);
+
+            const qLeft = Math.abs((x - cardW / 2) - 720) / 706;
+            const qRight = Math.abs((x + cardW / 2) - 720) / 706;
+            const hLeft = 280 + 92 * Math.pow(qLeft, 2.6);
+            const hRight = 280 + 92 * Math.pow(qRight, 2.6);
+            const maxH = Math.max(hLeft, hRight);
+
+            const wPx = cardW * u;
+            const maxHPx = maxH * u;
+            const xPx = CX + (x - 720 - cardW / 2) * u;
+            const yPx = (yCenter - YOFF - maxH / 2) * u;
+
+            c.el.style.width = `${wPx}px`;
+            c.el.style.height = `${maxHPx}px`;
+            c.el.style.transform = `translate3d(${xPx}px, ${yPx}px, 0)`;
+
+            // Rounded Quad Clip Path
+            const cornerR = 15 * u;
+            const topL = (maxH - hLeft) / 2 * u;
+            const botL = topL + hLeft * u;
+            const topR = (maxH - hRight) / 2 * u;
+            const botR = topR + hRight * u;
+
+            c.el.style.clipPath = `path('M 0 ${topL + cornerR} Q 0 ${topL} ${cornerR} ${topL} L ${wPx - cornerR} ${topR} Q ${wPx} ${topR} ${wPx} ${topR + cornerR} L ${wPx} ${botR - cornerR} Q ${wPx} ${botR} ${wPx - cornerR} ${botR} L ${cornerR} ${botL} Q 0 ${botL} 0 ${botL - cornerR} Z')`;
+          });
+        }
+
+        function carouselLoop(now) {
+          const dt = Math.min((now - lastTime) / 1000, 0.1);
+          lastTime = now;
+          if (heroVisible) updateCarousel(dt);
+          requestAnimationFrame(carouselLoop);
+        }
+        requestAnimationFrame(carouselLoop);
+
+        // Pointer Events for Drag
+        carouselWrap.addEventListener('pointerdown', (e) => {
+          isDragging = true;
+          startX = e.clientX;
+          lastX = e.clientX;
+          velocity = 0;
+          carouselWrap.classList.add('grabbing');
+          carouselWrap.setPointerCapture(e.pointerId);
+        });
+        window.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          const dx = (e.clientX - lastX) / U;
+          scrollOffset -= dx;
+          velocity = -dx * 30;
+          lastX = e.clientX;
+        });
+        function endDrag(e) {
+          if (!isDragging) return;
+          isDragging = false;
+          carouselWrap.classList.remove('grabbing');
+          try { carouselWrap.releasePointerCapture(e.pointerId); } catch(_) {}
+        }
+        window.addEventListener('pointerup', endDrag);
+        window.addEventListener('pointercancel', endDrag);
+
+        // ----------------------------------------------------
+        // 2. PINNED SCROLL STORY (MOSSLINE EXACT ALGORITHM)
+        // ----------------------------------------------------
+        const storySec = document.getElementById('story');
+        const storyTrack = document.getElementById('storyTrack');
+        const sparkDots = document.getElementById('sparkDots');
+        const storyVideo = document.getElementById('storyVideo');
+        const storyCanvas = document.getElementById('storyCanvas');
+        const storyPlate = document.getElementById('storyPlate');
+        const storyCam = document.getElementById('storyCam');
+        const storyCamF = document.getElementById('storyCamF');
+        const storyFog = document.getElementById('storyFog');
+        const storyL0 = document.getElementById('storyL0');
+        const storyL1 = document.getElementById('storyL1');
+        const storyL2 = document.getElementById('storyL2');
+        const storyL3 = document.getElementById('storyL3');
+        const storyL4 = document.getElementById('storyL4');
+        const storyRk1 = document.getElementById('storyRk1');
+        const storyRk3 = document.getElementById('storyRk3');
+        const storyVision = document.getElementById('storyVision');
+        const storyAcct = document.getElementById('storyAcct');
+        const storyCred = document.getElementById('storyCred');
+        const storyCarbonCard = document.getElementById('storyCarbonCard');
+        const storyScoreNum = document.getElementById('storyScoreNum');
+        const sparklinePoly = document.getElementById('sparklinePoly');
+        const storyFeats = document.getElementById('storyFeats');
+        const storyProgBar = document.getElementById('storyProgBar');
+        const storySol = document.getElementById('sol');
+        const statNums = document.querySelectorAll('.story-stat-num');
+        const storyStats = document.getElementById('storyStats');
+
+        const ctx = storyCanvas.getContext('2d');
+        const NF = 121;
+        const frames = new Array(NF);
+        let cachedCount = 0;
+        let shownFrame = -1;
+        let busy = false;
+
+        const grabCanvas = document.createElement('canvas');
+        grabCanvas.width = 1600;
+        grabCanvas.height = 900;
+        const grabCtx = grabCanvas.getContext('2d');
+
+        let needsRedraw = false;
+        let lastCW = 0, lastCH = 0;
+        let overlapPx = 0; // how far the Features panel tucks under the pinned scene
+        function resizeCanvas() {
+          const cw = storyCanvas.clientWidth, ch = storyCanvas.clientHeight;
+          // ignore tiny height changes (mobile address bar) so the canvas isn't wiped mid-scroll
+          if (Math.abs(cw - lastCW) < 2 && Math.abs(ch - lastCH) < 80) return;
+          lastCW = cw; lastCH = ch;
+          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+          storyCanvas.width = cw * dpr;   // resizing clears the canvas...
+          storyCanvas.height = ch * dpr;
+          needsRedraw = true;             // ...so repaint the current frame
+        }
+        function measureStory() {
+          overlapPx = -parseFloat(getComputedStyle(storySol).marginTop) || 0;
+        }
+        window.addEventListener('resize', () => { resizeCanvas(); measureStory(); });
+        resizeCanvas();
+        measureStory();
+
+        // Fallback: if the frame cache can't be built (e.g. no CORS), scrub the <video> directly
+        let seekMode = false, seeking = false;
+        function paintCover(src, sw0, sh0) {
+          const cw = storyCanvas.width, ch = storyCanvas.height;
+          const scale = Math.max(cw / sw0, ch / sh0);
+          const sw = sw0 * scale, sh = sh0 * scale;
+          ctx.clearRect(0, 0, cw, ch);
+          ctx.drawImage(src, (cw - sw) / 2, (ch - sh) / 2, sw, sh);
+        }
+        storyVideo.addEventListener('error', () => {
+          if (seekMode || !storyVideo.hasAttribute('crossorigin')) return;
+          seekMode = true;
+          storyVideo.removeAttribute('crossorigin');
+          storyVideo.load();
+        });
+        storyVideo.addEventListener('seeked', () => {
+          seeking = false;
+          if (!seekMode || !storyVideo.videoWidth) return;
+          try { paintCover(storyVideo, storyVideo.videoWidth, storyVideo.videoHeight); shownFrame = 1; } catch(e) {}
+        });
+        function seekTo(p) {
+          if (!seekMode || seeking || !storyVideo.duration) return;
+          const t = p * (storyVideo.duration - 0.05);
+          if (Math.abs(storyVideo.currentTime - t) < 0.02 && !needsRedraw) return;
+          needsRedraw = false;
+          seeking = true;
+          storyVideo.currentTime = t;
+        }
+
+        function cacheFrame(i) {
+          if (frames[i]) return;
+          try {
+            grabCtx.drawImage(storyVideo, 0, 0, 1600, 900);
+            grabCanvas.toBlob((blob) => {
+              if (blob && !frames[i]) {
+                frames[i] = blob;
+                cachedCount++;
+              }
+            }, 'image/jpeg', 0.86);
+          } catch(e) {}
+        }
+
+        // Cache video frames
+        storyVideo.addEventListener('loadeddata', () => {
+          cacheFrame(0);
+          if ('requestVideoFrameCallback' in HTMLVideoElement.prototype) {
+            function onFrame(now, meta) {
+              const i = Math.min(NF - 1, Math.round(meta.mediaTime * 24));
+              if (i > 0) cacheFrame(i);
+              if (!storyVideo.ended) storyVideo.requestVideoFrameCallback(onFrame);
+            }
+            storyVideo.requestVideoFrameCallback(onFrame);
+            storyVideo.play().catch(() => {});
+          }
+        });
+
+        async function drawWant(want) {
+          if (busy) return;
+          let target = want;
+          let blob = frames[target];
+          if (!blob) {
+            for (let k = 1; k < 15; k++) {
+              if (frames[target - k]) { blob = frames[target - k]; target -= k; break; }
+              if (frames[target + k]) { blob = frames[target + k]; target += k; break; }
+            }
+          }
+          if (!blob || (target === shownFrame && !needsRedraw)) return;
+
+          busy = true;
+          try {
+            const bmp = await createImageBitmap(blob);
+            paintCover(bmp, bmp.width, bmp.height);
+            bmp.close();
+            shownFrame = target;
+            needsRedraw = false;
+          } catch(e) {}
+          busy = false;
+        }
+
+        // Helpers
+        function clamp(v, min = 0, max = 1) { return Math.max(min, Math.min(max, v)); }
+        function seg(p, a, b) { return clamp((p - a) / (b - a)); }
+        function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+        let sp = 0;
+        let mx = 0, my = 0, sx = 0, sy = 0;
+        let statsCounted = false;
+
+        window.addEventListener('pointermove', (e) => {
+          mx = (e.clientX / window.innerWidth) - 0.5;
+          my = (e.clientY / window.innerHeight) - 0.5;
+        });
+
+        // Interactive Hotspots & Features
+        document.querySelectorAll('.story-hotspot').forEach((hs) => {
+          hs.addEventListener('click', () => {
+            document.querySelectorAll('.story-hotspot').forEach(h => { if (h !== hs) h.classList.remove('on'); });
+            hs.classList.toggle('on');
+          });
+        });
+        document.querySelectorAll('.story-feat-row').forEach((row) => {
+          row.addEventListener('click', () => {
+            document.querySelectorAll('.story-feat-row').forEach(r => { if (r !== row) r.classList.remove('on'); });
+            row.classList.toggle('on');
+          });
+        });
+
+        // 3D Card Tilt
+        document.querySelectorAll('[data-tilt]').forEach((card) => {
+          card.addEventListener('pointermove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const px = (e.clientX - rect.left) / rect.width - 0.5;
+            const py = (e.clientY - rect.top) / rect.height - 0.5;
+            card.style.transform = `perspective(1000px) rotateY(${px * 6}deg) rotateX(${-py * 6}deg)`;
+          });
+          card.addEventListener('pointerleave', () => {
+            card.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
+          });
+        });
+
+        // Main Scroll Animation Loop
+        let lastScrollTime = performance.now();
+        function scrollLoop(now) {
+          const dt = Math.min(now - lastScrollTime, 64);
+          lastScrollTime = now;
+
+          // Progress runs over the pinned track only (minus the overlap where the Features panel slides up)
+          const trackRect = storyTrack.getBoundingClientRect();
+          const rawP = clamp(-trackRect.top / Math.max(1, storyTrack.offsetHeight - window.innerHeight - overlapPx));
+          sp += (rawP - sp) * (1 - Math.pow(0.86, dt / 16.7));
+          if (Math.abs(rawP - sp) < 0.0002) sp = rawP;
+
+          sx += (mx - sx) * 0.06;
+          sy += (my - sy) * 0.06;
+
+          // Video scrub
+          const vp = easeInOut(seg(sp, 0.05, 0.70));
+          const want = Math.round(vp * (NF - 1));
+          drawWant(want);
+          seekTo(vp);
+
+          // Camera translation & parallax
+          const camY = -sy * 12 + (1 - vp) * window.innerHeight * 0.06;
+          const camScale = 1 + 0.02 * (1 - vp);
+          storyCam.style.transform = `translate3d(${-sx * 18}px, ${camY}px, 0) scale(${camScale})`;
+          storyCamF.style.transform = `translate3d(${-sx * 18}px, ${camY}px, 0) scale(${camScale})`;
+
+          // Hand-off
+          const ho = shownFrame < 0 ? 0 : (shownFrame === 0 ? seg(sp, 0.06, 0.105) : 1);
+          storyPlate.style.opacity = 1 - ho;
+          storyCamF.style.opacity = 1 - ho;
+          storyCamF.style.visibility = ho < 1 ? 'visible' : 'hidden';
+
+          // Floating rocks
+          const fp = seg(sp, 0.02, 0.2);
+          const fe = fp * fp;
+          if (fp < 1) {
+            [storyRk1, storyRk3].forEach((rk) => {
+              const rx = parseFloat(rk.dataset.x);
+              const ry = parseFloat(rk.dataset.y);
+              const rd = parseFloat(rk.dataset.d);
+              rk.style.visibility = 'visible';
+              rk.style.transform = `translate3d(${rx * fp * 70 + sx * -24 * rd}vw, ${ry * fp * 60 + sy * -16 * rd}vh, 0) scale(${1 + fe * 1.6 * rd})`;
+              rk.style.filter = `blur(${fe * 5 * rd}px)`;
+            });
+          } else {
+            storyRk1.style.visibility = 'hidden';
+            storyRk3.style.visibility = 'hidden';
+          }
+
+          // Fog Bank
+          const fg = easeInOut(seg(sp, 0.38, 0.47));
+          storyFog.style.visibility = fg > 0 ? 'visible' : 'hidden';
+          storyFog.style.opacity = fg;
+          storyFog.style.transform = `translate3d(${(fg - 1) * 18 - sx * 10}vw, ${sy * -6}px, 0)`;
+
+          // Beat 1: Hero copy & HUD
+          const h = seg(sp, 0.02, 0.1);
+          const heroHeadlineEl = document.getElementById('storyHeroCopy');
+          if (h < 1) {
+            storyL0.style.visibility = 'visible';
+            heroHeadlineEl.style.transform = `translate3d(${-sx * 10}px, ${-h * 80 - sy * 6}px, 0) scale(${1 + h * 0.12})`;
+            heroHeadlineEl.style.filter = `blur(${h * 14}px)`;
+            heroHeadlineEl.style.opacity = 1 - h;
+          } else {
+            storyL0.style.visibility = 'hidden';
+          }
+
+          const hudH = 1 - seg(sp, 0.02, 0.08);
+          document.getElementById('storyHud').style.opacity = hudH;
+          document.getElementById('storyHud').style.transform = `translate3d(${sx * 26}px, ${sy * 18 - h * 40}px, 0)`;
+          document.getElementById('storyCaption').style.opacity = 1 - seg(sp, 0.01, 0.05);
+          document.getElementById('storyHint').style.opacity = 1 - seg(sp, 0.01, 0.05);
+
+          // Beat 2: Vision statement
+          const vIn = seg(sp, 0.16, 0.27);
+          const vOut = seg(sp, 0.34, 0.42);
+          if (vIn > 0 && vOut < 1) {
+            storyVision.style.visibility = 'visible';
+            const words = storyVision.querySelectorAll('.word');
+            words.forEach((w, idx) => {
+              const k = clamp(vIn * 1.6 - idx * 0.08);
+              w.style.transform = `translate3d(0, ${(1 - k) * 30 - vOut * 60}px, 0)`;
+              w.style.filter = `blur(${(1 - k) * 12 + vOut * 14}px)`;
+              w.style.opacity = k * (1 - vOut);
+            });
+            const p = storyVision.querySelector('p');
+            p.style.opacity = clamp(vIn * 2 - 0.6) * (1 - vOut);
+            p.style.transform = `translateY(${-vOut * 50}px)`;
+          } else {
+            storyVision.style.visibility = 'hidden';
+          }
+
+          // Beat 3: Accounting & Hotspots
+          const aIn = seg(sp, 0.45, 0.55);
+          const aOut = seg(sp, 0.63, 0.68);
+          if (aIn > 0 && aOut < 1) {
+            storyAcct.style.visibility = 'visible';
+            storyAcct.style.opacity = aIn * (1 - aOut);
+            [1, 2, 3, 4].forEach((n, idx) => {
+              const hs = document.getElementById('hs' + n);
+              const k = seg(sp, 0.49 + idx * 0.02, 0.53 + idx * 0.02);
+              hs.style.visibility = 'visible';
+              hs.style.transform = `translate3d(${sx * -30}px, ${sy * -20}px, 0) scale(${k * (1 - aOut)})`;
+            });
+          } else {
+            storyAcct.style.visibility = 'hidden';
+            [1, 2, 3, 4].forEach(n => document.getElementById('hs' + n).style.visibility = 'hidden');
+          }
+
+          // Beat 4: Station, Carbon card & Features
+          const sIn = seg(sp, 0.72, 0.82);
+          if (sIn > 0) {
+            storyCred.style.visibility = 'visible';
+            storyCred.style.opacity = sIn;
+            storyCred.style.transform = `translateY(${(1 - sIn) * 30}px)`;
+            storyCred.style.filter = `blur(${(1 - sIn) * 8}px)`;
+
+            const cIn = easeInOut(seg(sp, 0.74, 0.86));
+            storyCarbonCard.style.visibility = 'visible';
+            storyCarbonCard.style.opacity = cIn;
+            storyCarbonCard.style.transform = `translate3d(${sx * -14}px, ${(1 - cIn) * 60 + sy * -10}px, 0) rotateY(${sx * 8}deg) rotateX(${-sy * 8}deg)`;
+
+            const score = Math.round(24 * seg(sp, 0.76, 0.90));
+            storyScoreNum.textContent = score;
+
+            const dashOffset = (1 - seg(sp, 0.77, 0.92)) * 300;
+            sparklinePoly.style.strokeDasharray = '300';
+            sparklinePoly.style.strokeDashoffset = dashOffset;
+
+            storyFeats.style.visibility = 'visible';
+            storyFeats.style.opacity = easeInOut(seg(sp, 0.74, 0.80));
+            sparkDots.style.opacity = seg(sp, 0.88, 0.93);
+            const featRows = storyFeats.querySelectorAll('.story-feat-row');
+            featRows.forEach((r, idx) => {
+              const k = easeInOut(seg(sp, 0.76 + idx * 0.025, 0.82 + idx * 0.025));
+              r.style.opacity = k;
+              r.style.transform = `translateX(${(1 - k) * 40}px)`;
+            });
+          } else {
+            storyCred.style.visibility = 'hidden';
+            storyCarbonCard.style.visibility = 'hidden';
+            storyFeats.style.visibility = 'hidden';
+          }
+
+          // Progress bar
+          storyProgBar.style.transform = `scaleX(${sp})`;
+
+          // Trigger Stats Counter on Solutions Panel
+          const statsRect = storyStats.getBoundingClientRect();
+          if (!statsCounted && statsRect.top < window.innerHeight * 0.92) {
+            statsCounted = true;
+            statNums.forEach((el) => {
+              const target = parseFloat(el.dataset.target);
+              const isPercent = el.dataset.suffix === '%';
+              let startTime = performance.now();
+              function count(now) {
+                const p = Math.min((now - startTime) / 1600, 1);
+                const cur = easeInOut(p) * target;
+                el.textContent = (target % 1 === 0 ? Math.round(cur) : cur.toFixed(1)) + (isPercent ? '%' : '');
+                if (p < 1) requestAnimationFrame(count);
+              }
+              requestAnimationFrame(count);
+            });
+          }
+
+          requestAnimationFrame(scrollLoop);
+        }
+        requestAnimationFrame(scrollLoop);
+
+        // Play the headline "rise" when the scene actually scrolls into view
+        const storyStage = document.querySelector('.story-stage');
+        if ('IntersectionObserver' in window) {
+          const io = new IntersectionObserver((entries) => {
+            if (entries.some((e) => e.isIntersecting)) { storySec.classList.add('in-view'); io.disconnect(); }
+          }, { threshold: 0.35 });
+          io.observe(storyStage);
+        } else {
+          storySec.classList.add('in-view');
+        }
+
+        // Footer wordmark: always fit edge-to-edge without clipping, whatever the font/screen
+        const footSec = document.getElementById('footer');
+        const wordmark = footSec.querySelector('.foot-wordmark');
+        function fitWordmark() {
+          wordmark.style.fontSize = '';
+          const base = parseFloat(getComputedStyle(wordmark).fontSize);
+          const w = wordmark.getBoundingClientRect().width;
+          if (w > 0) wordmark.style.fontSize = (base * (footSec.clientWidth * 0.97) / w) + 'px';
+        }
+        fitWordmark();
+        window.addEventListener('resize', fitWordmark);
+        window.addEventListener('load', fitWordmark);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitWordmark);
+
+        // Buttons go to the Campusly app
+        function goToApp(page) {
+          return function (e) {
+            if (e) e.preventDefault();
+            window.location.href = '/app.html#/' + page;
+          };
+        }
+        document.getElementById('heroLoginBtn').addEventListener('click', goToApp('login'));
+        document.getElementById('heroSignUpBtn').addEventListener('click', goToApp('signup'));
+        document.getElementById('heroMainCtaBtn').addEventListener('click', goToApp('signup'));
+        document.getElementById('footerCtaBtn').addEventListener('click', goToApp('signup'));
+      })();
+    </script>
+  </body>
+</html>
