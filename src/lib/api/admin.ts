@@ -8,7 +8,7 @@ export async function listReports(status: 'open' | 'reviewing' | 'actioned' | 'd
 }
 
 export async function resolveReport(id: string, action: 'reviewing' | 'actioned' | 'dismissed'): Promise<void> {
-  const res = await supabase.rpc('admin_resolve_report', { p_report: id, p_status: action });
+  const res = await supabase.rpc('admin_resolve_report', { p_id: id, p_status: action });
   unwrap(res as { data: unknown; error: unknown });
 }
 
@@ -18,6 +18,6 @@ export async function listPendingConfessions(): Promise<ConfessionFeedRow[]> {
 }
 
 export async function reviewConfession(id: string, approve: boolean): Promise<void> {
-  const res = await supabase.rpc('admin_review_confession', { p_confession: id, p_approve: approve });
+  const res = await supabase.rpc('admin_review_confession', { p_id: id, p_approve: approve });
   unwrap(res as { data: unknown; error: unknown });
 }
