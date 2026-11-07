@@ -18,13 +18,13 @@ on conflict (id) do update
       allowed_mime_types = excluded.allowed_mime_types;
 
 drop policy if exists "campus photos read own" on storage.objects;
-create policy "campus photos read own"
+drop policy if exists "campus photos read" on storage.objects;
+-- Lost & found is a shared board, so any signed-in student may view the photos
+-- (still private: no public link, only signed URLs for signed-in users).
+create policy "campus photos read"
   on storage.objects for select
   to authenticated
-  using (
-    bucket_id = 'campus-photos'
-    and (storage.foldername(name))[1] = (select auth.uid())::text
-  );
+  using (bucket_id = 'campus-photos');
 
 drop policy if exists "campus photos upload own" on storage.objects;
 create policy "campus photos upload own"

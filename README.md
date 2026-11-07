@@ -8,7 +8,7 @@ Built with **Vite + React 19 + TypeScript + Tailwind CSS v4 + Supabase**.
 
 ```bash
 npm install
-cp .env.example .env.local   # if .env.example exists; otherwise create .env.local
+cp .env.example .env.local
 npm run dev
 ```
 

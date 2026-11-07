@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { openChatChannel, type ChatChannel } from '@/lib/api/realtime';
 import { friendlyError } from '@/lib/errors';
 import { markAllDelivered, markSeen } from '@/lib/api/conversations';
 import {
@@ -31,7 +31,7 @@ export function useChatRoom(conversationId: string, meId: string) {
   const [loadingOlder, setLoadingOlder] = useState(false);
   const [typing, setTyping] = useState<Record<string, { name: string; at: number }>>({});
   const [connected, setConnected] = useState(false);
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const channelRef = useRef<ChatChannel | null>(null);
   const typingSentRef = useRef(0);
   const messagesRef = useRef<ChatMessage[]>([]);
   messagesRef.current = messages;
@@ -59,21 +59,19 @@ export function useChatRoom(conversationId: string, meId: string) {
   useEffect(() => {
     if (!conversationId) return;
     let alive = true;
-    const channel = supabase
-      .channel(`chat:${conversationId}`, { config: { broadcast: { self: false } } })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` }, () => { void refreshLatest(); })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'message_reactions' }, () => { void refreshLatest(); })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'message_receipts' }, () => { void refreshLatest(); })
-      .on('broadcast', { event: 'typing' }, ({ payload }) => {
-        const p = payload as { userId?: string; name?: string };
+    const channel = openChatChannel(conversationId, {
+      onChange: () => { void refreshLatest(); },
+      onTyping: (p) => {
         if (!alive || !p.userId || p.userId === meId) return;
-        setTyping((prev) => ({ ...prev, [p.userId!]: { name: p.name ?? 'Someone', at: Date.now() } }));
-      })
-      .subscribe((status) => {
+        const who = p.userId;
+        setTyping((prev) => ({ ...prev, [who]: { name: p.name ?? 'Someone', at: Date.now() } }));
+      },
+      onStatus: (isUp) => {
         if (!alive) return;
-        setConnected(status === 'SUBSCRIBED');
-        if (status === 'SUBSCRIBED') void refreshLatest();
-      });
+        setConnected(isUp);
+        if (isUp) void refreshLatest();
+      },
+    });
     channelRef.current = channel;
 
     const cleanup = setInterval(() => {
@@ -88,7 +86,7 @@ export function useChatRoom(conversationId: string, meId: string) {
       alive = false;
       clearInterval(cleanup);
       channelRef.current = null;
-      void supabase.removeChannel(channel);
+      channel.close();
     };
   }, [conversationId, meId, refreshLatest]);
 
@@ -172,7 +170,7 @@ export function useChatRoom(conversationId: string, meId: string) {
     if (now - typingSentRef.current < 1200) return;
     typingSentRef.current = now;
     const channel = channelRef.current;
-    if (channel) void channel.send({ type: 'broadcast', event: 'typing', payload: { userId: meId, name: 'Someone', at: now } });
+    if (channel) channel.sendTyping({ userId: meId, name: 'Someone', at: now });
   }, [meId]);
 
   return {
