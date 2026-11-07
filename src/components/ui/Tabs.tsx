@@ -13,11 +13,11 @@ export function Tabs({ tabs, value, onChange, label }: Props) {
             key={t.id} role="tab" type="button" aria-selected={active} onClick={() => onChange(t.id)}
             className={cn(
               'flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors',
-              active ? 'bg-white text-forest shadow-sm' : 'text-forest/70 hover:text-forest',
+              active ? 'bg-surface text-forest shadow-sm' : 'text-forest/70 hover:text-forest',
             )}
           >
             {t.label}
-            {!!t.badge && <span className="rounded-full bg-forest px-1.5 text-xs text-white">{t.badge > 99 ? '99+' : t.badge}</span>}
+            {!!t.badge && <span className="rounded-full bg-brand px-1.5 text-xs text-white">{t.badge > 99 ? '99+' : t.badge}</span>}
           </button>
         );
       })}

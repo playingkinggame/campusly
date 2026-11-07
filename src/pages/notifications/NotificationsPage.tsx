@@ -89,7 +89,7 @@ export default function NotificationsPage() {
                       <span className="block"><strong className="text-forest">{n.actor?.full_name ?? 'Someone'}</strong> {meta.text}</span>
                       <span className="block text-xs text-muted">{timeAgo(n.created_at)}</span>
                     </span>
-                    {!n.read_at && <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-forest" aria-label="Unread" />}
+                    {!n.read_at && <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-brand" aria-label="Unread" />}
                   </button>
                 </li>
               );

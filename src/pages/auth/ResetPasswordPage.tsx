@@ -46,7 +46,7 @@ export default function ResetPasswordPage() {
   if (status === 'signed_out') {
     return (
       <AuthLayout title="Link expired" subtitle="This reset link is not valid any more.">
-        <Link to="/forgot-password" className="inline-flex h-12 w-full items-center justify-center rounded-2xl bg-forest px-6 font-semibold text-white hover:bg-forest-600">
+        <Link to="/forgot-password" className="inline-flex h-12 w-full items-center justify-center rounded-2xl bg-brand px-6 font-semibold text-white hover:bg-brand-600">
           Get a new link
         </Link>
       </AuthLayout>

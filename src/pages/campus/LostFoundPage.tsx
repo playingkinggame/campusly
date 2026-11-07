@@ -59,7 +59,7 @@ export default function LostFoundPage() {
             <Card key={item.id} className="flex flex-col gap-2">
               {item.image_path && <Photo path={item.image_path} />}
               <div className="flex items-start justify-between gap-2">
-                <div><span className={item.kind === 'lost' ? 'rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800' : 'rounded-full bg-mint px-2 py-0.5 text-[10px] font-semibold text-forest'}>{item.kind === 'lost' ? 'LOST' : 'FOUND'}</span><h2 className="mt-1 font-semibold text-forest">{item.title}</h2></div>
+                <div><span className={item.kind === 'lost' ? 'rounded-full bg-warn-soft px-2 py-0.5 text-[10px] font-semibold text-warn-ink' : 'rounded-full bg-mint px-2 py-0.5 text-[10px] font-semibold text-forest'}>{item.kind === 'lost' ? 'LOST' : 'FOUND'}</span><h2 className="mt-1 font-semibold text-forest">{item.title}</h2></div>
                 <PostActions targetType="post" targetId={item.id} targetName={item.title} authorId={item.author_id} authorName={item.author?.full_name} onDelete={item.author_id === me ? () => remove(item.id) : undefined} onChanged={() => void state.reload()} />
               </div>
               {item.description && <p className="text-sm text-muted">{item.description}</p>}

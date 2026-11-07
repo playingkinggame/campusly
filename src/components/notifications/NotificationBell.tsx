@@ -72,14 +72,14 @@ export function NotificationBell() {
         aria-label={`Notifications${unread ? `, ${unread} unread` : ''}`}
         aria-expanded={open}
         aria-haspopup="dialog"
-        className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-line bg-white/70 text-forest hover:bg-mint/60"
+        className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-line bg-surface/70 text-forest hover:bg-mint/60"
       >
         <Bell className="h-5 w-5" aria-hidden="true" />
         {unread > 0 && <CountBadge n={unread} className="absolute -right-1.5 -top-1.5 !min-w-4 !px-1 !text-[10px] !leading-4" />}
       </button>
 
       {open && (
-        <div role="dialog" aria-label="Notifications" className="absolute right-0 top-full z-50 mt-2 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-line bg-white shadow-2xl">
+        <div role="dialog" aria-label="Notifications" className="absolute right-0 top-full z-50 mt-2 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl">
           <div className="flex items-center justify-between gap-2 border-b border-line px-3 py-2.5">
             <p className="text-sm font-semibold text-forest">Notifications</p>
             {hasUnread ? (
@@ -96,7 +96,7 @@ export function NotificationBell() {
               </div>
             ) : notes.error && !notes.data ? (
               <div className="space-y-2 px-2 py-4 text-center">
-                <p className="text-sm text-danger">{notes.error}</p>
+                <p className="text-sm text-danger-ink">{notes.error}</p>
                 <Button variant="secondary" size="sm" onClick={() => void notes.reload()}>Try again</Button>
               </div>
             ) : items.length === 0 ? (
@@ -117,7 +117,7 @@ export function NotificationBell() {
                           <span className="block leading-snug"><strong className="text-forest">{n.actor?.full_name ?? 'Someone'}</strong> {meta.text}</span>
                           <span className="block text-xs text-muted">{timeAgo(n.created_at)}</span>
                         </span>
-                        {!n.read_at && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-forest" aria-label="Unread" />}
+                        {!n.read_at && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand" aria-label="Unread" />}
                       </button>
                     </li>
                   );

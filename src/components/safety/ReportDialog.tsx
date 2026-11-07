@@ -97,7 +97,7 @@ export function ReportDialog({ open, onClose, targetType, targetId, targetName }
                 key={r.value}
                 className={cn(
                   'flex cursor-pointer items-start gap-3 rounded-2xl border p-3 transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-[3px] has-[:focus-visible]:outline-forest',
-                  reason === r.value ? 'border-forest bg-mint/50' : 'border-line bg-white/70 hover:bg-mint/30',
+                  reason === r.value ? 'border-forest bg-mint/50' : 'border-line bg-surface/70 hover:bg-mint/30',
                 )}
               >
                 <input
@@ -126,7 +126,7 @@ export function ReportDialog({ open, onClose, targetType, targetId, targetName }
           placeholder="Add a short note for the admins"
         />
 
-        {error && <p role="alert" className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-danger">{error}</p>}
+        {error && <p role="alert" className="rounded-2xl bg-danger-soft px-4 py-3 text-sm text-danger-ink">{error}</p>}
       </form>
     </Modal>
   );

@@ -161,7 +161,7 @@ export function ProfileForm({ mode, initial, onSaved, onCancel }: Props) {
   const nameHint =
     nameState === 'checking' ? <span className="inline-flex items-center gap-1"><Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> Checking…</span>
     : nameState === 'free' ? <span className="inline-flex items-center gap-1 text-forest"><CheckCircle2 className="h-4 w-4" aria-hidden="true" /> Username is free</span>
-    : nameState === 'taken' ? <span className="inline-flex items-center gap-1 text-danger"><XCircle className="h-4 w-4" aria-hidden="true" /> Already taken</span>
+    : nameState === 'taken' ? <span className="inline-flex items-center gap-1 text-danger-ink"><XCircle className="h-4 w-4" aria-hidden="true" /> Already taken</span>
     : 'Lowercase letters, numbers and underscores. 3 to 20 characters.';
 
   return (
@@ -176,7 +176,7 @@ export function ProfileForm({ mode, initial, onSaved, onCancel }: Props) {
             <Camera className="h-4 w-4" aria-hidden="true" /> {preview || initial.avatar_path ? 'Change photo' : 'Add a photo'}
           </Button>
           <p className="text-sm text-muted">JPG, PNG or WebP. We shrink it for you.</p>
-          {errors.avatar && <p role="alert" className="text-sm text-danger">{errors.avatar}</p>}
+          {errors.avatar && <p role="alert" className="text-sm text-danger-ink">{errors.avatar}</p>}
         </div>
       </div>
 
@@ -198,19 +198,19 @@ export function ProfileForm({ mode, initial, onSaved, onCancel }: Props) {
 
       {/* Residence */}
       <fieldset className="space-y-2">
-        <legend className="text-sm font-semibold text-forest">Where do you stay? <span className="text-danger" aria-hidden="true">*</span></legend>
+        <legend className="text-sm font-semibold text-forest">Where do you stay? <span className="text-danger-ink" aria-hidden="true">*</span></legend>
         <div className="grid grid-cols-2 gap-3">
           {([['day_scholar', 'Day scholar'], ['hosteller', 'Hosteller']] as const).map(([val, label]) => (
             <label key={val} className={cn(
               'flex cursor-pointer items-center justify-center rounded-2xl border px-4 py-3 text-sm font-semibold has-[:focus-visible]:outline has-[:focus-visible]:outline-[3px] has-[:focus-visible]:outline-forest',
-              residence === val ? 'border-forest bg-forest text-white' : 'border-line bg-white/80 text-forest hover:bg-mint/50',
+              residence === val ? 'border-forest bg-brand text-white' : 'border-line bg-surface/80 text-forest hover:bg-mint/50',
             )}>
               <input type="radio" name="residence" value={val} checked={residence === val} onChange={() => setResidence(val)} className="sr-only" />
               {label}
             </label>
           ))}
         </div>
-        {errors.residence && <p role="alert" className="text-sm text-danger">{errors.residence}</p>}
+        {errors.residence && <p role="alert" className="text-sm text-danger-ink">{errors.residence}</p>}
         {residence === 'hosteller' && (
           <div className="grid gap-4 pt-2 sm:grid-cols-2">
             <Input label="Hostel block" list="block-list" value={hostelBlock} onChange={(e) => setHostelBlock(e.target.value)} placeholder="A Block" />
@@ -230,7 +230,7 @@ export function ProfileForm({ mode, initial, onSaved, onCancel }: Props) {
       <Input label="Social link" type="url" value={socialLink} onChange={(e) => setSocialLink(e.target.value)} error={errors.social_link}
         placeholder="https://github.com/yourname" hint="Optional. Instagram, GitHub, LinkedIn…" />
 
-      {errors.form && <p role="alert" className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-danger">{errors.form}</p>}
+      {errors.form && <p role="alert" className="rounded-2xl bg-danger-soft px-4 py-3 text-sm text-danger-ink">{errors.form}</p>}
 
       <div className="flex flex-wrap justify-end gap-2">
         {onCancel && <Button variant="ghost" onClick={onCancel}>Cancel</Button>}

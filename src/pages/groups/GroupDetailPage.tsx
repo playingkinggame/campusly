@@ -228,7 +228,7 @@ export default function GroupDetailPage() {
                   {announcements.length === 0 ? <EmptyState icon={<Megaphone className="h-6 w-6" />} title="No announcements" text="Important updates from group admins will appear here." /> : (
                     <ul className="space-y-2">
                       {announcements.map((a) => (
-                        <li key={a.id} className="rounded-2xl border border-line bg-white/70 p-3">
+                        <li key={a.id} className="rounded-2xl border border-line bg-surface/70 p-3">
                           <div className="flex items-start justify-between gap-2">
                             <div><h3 className="text-sm font-semibold text-forest">{a.title}</h3><p className="text-xs text-muted">{a.author?.full_name ?? 'Admin'} · {timeAgo(a.created_at)}</p></div>
                             {canManage && <Button variant="ghost" size="sm" onClick={() => void removeAnnouncement(a.id)}>Delete</Button>}
@@ -247,7 +247,7 @@ export default function GroupDetailPage() {
                   {pinned.length === 0 ? <EmptyState icon={<Pin className="h-6 w-6" />} title="Nothing pinned" text="Open the group chat and pin an important message." /> : (
                     <ul className="space-y-2">
                       {pinned.map((p) => (
-                        <li key={p.pin.id} className="rounded-2xl border border-line bg-white/70 p-3">
+                        <li key={p.pin.id} className="rounded-2xl border border-line bg-surface/70 p-3">
                           <p className="text-xs text-muted">{p.sender?.full_name ?? 'Someone'} · {formatDateTime(p.pin.pinned_at)}</p>
                           <p className="mt-1 whitespace-pre-wrap text-sm text-ink/90">{p.message?.deleted_at ? 'This message was unsent' : p.message?.body ?? 'Attachment'}</p>
                           {canManage && <Button variant="ghost" size="sm" className="mt-1" onClick={() => void removePin(p.pin.id)}>Unpin</Button>}

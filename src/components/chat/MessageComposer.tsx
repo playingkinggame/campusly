@@ -54,7 +54,7 @@ export function MessageComposer({ disabled, replyTo, onCancelReply, onSendText, 
   }
 
   return (
-    <div className="shrink-0 border-t border-line bg-white/40 p-2 sm:p-3">
+    <div className="shrink-0 border-t border-line bg-surface/40 p-2 sm:p-3">
       {replyTo && (
         <div className="mb-2 flex items-start gap-2 rounded-xl bg-mint/50 px-3 py-2 text-xs text-forest">
           <div className="min-w-0 flex-1">
@@ -79,7 +79,7 @@ export function MessageComposer({ disabled, replyTo, onCancelReply, onSendText, 
             <Button variant="ghost" size="sm" aria-label="Send a file" disabled={busy} onClick={() => fileRef.current?.click()}><Paperclip className="h-5 w-5" aria-hidden="true" /></Button>
             <Button variant="ghost" size="sm" aria-label="Send a photo" disabled={busy} onClick={() => fileRef.current?.click()}><ImageIcon className="h-5 w-5" aria-hidden="true" /></Button>
             <Button variant="ghost" size="sm" aria-label="Record a voice note" disabled={busy} onClick={() => setRecording(true)}><Mic className="h-5 w-5" aria-hidden="true" /></Button>
-            <textarea ref={textRef} value={text} onChange={(e) => { setText(e.target.value); onTyping(); }} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); void submit(); } }} rows={1} maxLength={4000} placeholder="Write a message…" aria-label="Message" className="max-h-32 min-h-11 flex-1 resize-y rounded-2xl border border-line bg-white/80 px-4 py-2.5 text-[15px] text-ink placeholder:text-muted/70 focus:border-forest" />
+            <textarea ref={textRef} value={text} onChange={(e) => { setText(e.target.value); onTyping(); }} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); void submit(); } }} rows={1} maxLength={4000} placeholder="Write a message…" aria-label="Message" className="max-h-32 min-h-11 flex-1 resize-y rounded-2xl border border-line bg-surface/80 px-4 py-2.5 text-[15px] text-ink placeholder:text-muted/70 focus:border-forest" />
             <Button size="sm" aria-label="Send message" loading={busy} disabled={!text.trim()} onClick={() => void submit()}><Send className="h-4 w-4" aria-hidden="true" /></Button>
           </div>
           {text.length > 3500 && <p className="mt-1 text-right text-[11px] text-muted">{text.length}/4000</p>}

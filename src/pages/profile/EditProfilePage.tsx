@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/Feedback';
 import { ProfileForm } from '@/components/profile/ProfileForm';
 import { PrivacyPanel } from '@/components/profile/PrivacyPanel';
+import { AppearancePanel } from '@/components/theme/AppearancePanel';
 import { useAuth } from '@/store/authStore';
 import { toast } from '@/store/uiStore';
 
@@ -37,6 +38,8 @@ export default function EditProfilePage() {
           onCancel={() => navigate('/profile')}
         />
       </Card>
+
+      <AppearancePanel />
 
       <PrivacyPanel />
     </div>

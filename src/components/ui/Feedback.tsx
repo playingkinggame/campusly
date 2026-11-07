@@ -27,7 +27,7 @@ export function EmptyState({ title, text, action, icon }: { title: string; text?
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
     <div role="alert" className="flex flex-col items-center gap-2 px-4 py-10 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-danger" aria-hidden="true">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-danger-soft text-danger-ink" aria-hidden="true">
         <AlertTriangle className="h-6 w-6" />
       </div>
       <h3 className="text-lg font-semibold text-ink">Something went wrong</h3>

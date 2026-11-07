@@ -236,7 +236,7 @@ export function RelationActions({
         >
           <MoreHorizontal className="h-5 w-5" aria-hidden="true" />
         </summary>
-        <div className="absolute right-0 z-30 mt-1 w-44 rounded-2xl border border-line bg-white p-1 shadow-xl">
+        <div className="absolute right-0 z-30 mt-1 w-44 rounded-2xl border border-line bg-surface p-1 shadow-xl">
           <button
             type="button"
             onClick={() => { closeMenu(); setReportOpen(true); }}
@@ -247,7 +247,7 @@ export function RelationActions({
           <button
             type="button"
             onClick={() => { closeMenu(); setBlockOpen(true); }}
-            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-danger hover:bg-red-50"
+            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-danger-ink hover:bg-danger-soft"
           >
             <Ban className="h-4 w-4" aria-hidden="true" /> Block
           </button>

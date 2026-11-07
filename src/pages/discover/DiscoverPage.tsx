@@ -98,7 +98,7 @@ export default function DiscoverPage() {
             </div>
 
             <div className="mt-4 flex flex-col items-center gap-2">
-              {paged.moreError && <p role="alert" className="text-sm text-danger">{paged.moreError}</p>}
+              {paged.moreError && <p role="alert" className="text-sm text-danger-ink">{paged.moreError}</p>}
               {paged.hasMore ? (
                 <Button variant="secondary" loading={paged.loadingMore} onClick={paged.loadMore}>Load more people</Button>
               ) : (

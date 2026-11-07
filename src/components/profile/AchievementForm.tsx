@@ -201,14 +201,14 @@ export function AchievementForm({ open, onClose, initial, userId, onSaved }: Pro
         </div>
 
         {showCurrentFile && (
-          <div className="flex items-center justify-between gap-2 rounded-2xl border border-line bg-white/70 px-3 py-2 text-sm">
+          <div className="flex items-center justify-between gap-2 rounded-2xl border border-line bg-surface/70 px-3 py-2 text-sm">
             <span className="inline-flex items-center gap-1.5 font-medium text-forest">
               <FileText className="h-4 w-4" aria-hidden="true" /> Current file
             </span>
             <button
               type="button"
               onClick={() => setRemoveExisting(true)}
-              className="font-semibold text-danger hover:underline"
+              className="font-semibold text-danger-ink hover:underline"
             >
               Remove
             </button>
@@ -216,7 +216,7 @@ export function AchievementForm({ open, onClose, initial, userId, onSaved }: Pro
         )}
 
         {removeExisting && initial?.file_path && (
-          <div className="flex items-center justify-between gap-2 rounded-2xl bg-red-50 px-3 py-2 text-sm text-danger">
+          <div className="flex items-center justify-between gap-2 rounded-2xl bg-danger-soft px-3 py-2 text-sm text-danger-ink">
             <span>The current file will be removed when you save.</span>
             <button
               type="button"
@@ -232,7 +232,7 @@ export function AchievementForm({ open, onClose, initial, userId, onSaved }: Pro
           <p className="text-sm text-muted">The new file will replace the current one.</p>
         )}
 
-        {error && <p role="alert" className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-danger">{error}</p>}
+        {error && <p role="alert" className="rounded-2xl bg-danger-soft px-4 py-3 text-sm text-danger-ink">{error}</p>}
       </form>
     </Modal>
   );

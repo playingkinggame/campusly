@@ -17,7 +17,7 @@ export const PasswordField = forwardRef<HTMLInputElement, Props>(function Passwo
   return (
     <div className="space-y-1.5">
       <label htmlFor={id} className="block text-sm font-semibold text-forest">
-        {label}{required && <span className="text-danger" aria-hidden="true"> *</span>}
+        {label}{required && <span className="text-danger-ink" aria-hidden="true"> *</span>}
       </label>
       <div className="relative">
         <input
@@ -25,9 +25,9 @@ export const PasswordField = forwardRef<HTMLInputElement, Props>(function Passwo
           aria-invalid={!!error || undefined}
           aria-describedby={error ? `${id}-err` : hint ? `${id}-hint` : undefined}
           className={cn(
-            'h-12 w-full rounded-2xl border border-line bg-white/80 pl-4 pr-12 text-[15px] text-ink ' +
+            'h-12 w-full rounded-2xl border border-line bg-surface/80 pl-4 pr-12 text-[15px] text-ink ' +
             'placeholder:text-muted/70 focus:border-forest disabled:opacity-60',
-            error && 'border-danger', className,
+            error && 'border-danger-ink', className,
           )}
           {...rest}
         />
@@ -40,7 +40,7 @@ export const PasswordField = forwardRef<HTMLInputElement, Props>(function Passwo
         </button>
       </div>
       {error ? (
-        <p id={`${id}-err`} role="alert" className="text-sm text-danger">{error}</p>
+        <p id={`${id}-err`} role="alert" className="text-sm text-danger-ink">{error}</p>
       ) : hint ? (
         <p id={`${id}-hint`} className="text-sm text-muted">{hint}</p>
       ) : null}

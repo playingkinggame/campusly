@@ -11,7 +11,7 @@ import { useUnread } from '@/store/unreadStore';
 import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
 import { listNotifications, markAllNotificationsRead, type NotificationWithActor } from '@/lib/api/notifications';
-import { cn, timeAgo } from '@/lib/utils';
+import { cn, firstName as getFirstName, timeAgo } from '@/lib/utils';
 import type { NotificationKind } from '@/types/db';
 
 const TEXT: Record<NotificationKind, { text: string; to: string }> = {
@@ -49,7 +49,7 @@ export default function HomePage() {
   };
 
   const items = (notes.data ?? []) as NotificationWithActor[];
-  const firstName = profile?.full_name?.split(' ')[0] ?? 'there';
+  const firstName = getFirstName(profile?.full_name) || 'there';
 
   return (
     <div className="space-y-6">
@@ -88,7 +88,7 @@ export default function HomePage() {
                         <strong className="text-forest">{n.actor?.full_name ?? 'Someone'}</strong> {meta.text}
                         <span className="block text-xs text-muted">{timeAgo(n.created_at)}</span>
                       </span>
-                      {!n.read_at && <span className="h-2.5 w-2.5 rounded-full bg-forest" aria-label="New" />}
+                      {!n.read_at && <span className="h-2.5 w-2.5 rounded-full bg-brand" aria-label="New" />}
                     </Link>
                   </li>
                 );

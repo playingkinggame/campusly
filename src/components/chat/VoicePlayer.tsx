@@ -44,12 +44,12 @@ export function VoicePlayer({ path, durationMs, waveform, mine }: {
 
   return (
     <div className="flex min-w-[190px] items-center gap-2">
-      <button type="button" onClick={() => void toggle()} aria-label={playing ? 'Pause voice note' : 'Play voice note'} className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-full', mine ? 'bg-white/20 text-white' : 'bg-forest text-white')}>
+      <button type="button" onClick={() => void toggle()} aria-label={playing ? 'Pause voice note' : 'Play voice note'} className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-full', mine ? 'bg-white/20 text-white' : 'bg-brand text-white')}>
         {playing ? <Pause className="h-3.5 w-3.5" aria-hidden="true" /> : <Play className="h-3.5 w-3.5" aria-hidden="true" />}
       </button>
       <div className="flex min-w-0 flex-1 items-center gap-[2px]" aria-hidden="true">
         {bars.map((value, index) => (
-          <span key={index} className={cn('w-[2px] rounded-full', index / bars.length <= ratio ? mine ? 'bg-white' : 'bg-forest' : mine ? 'bg-white/30' : 'bg-forest/20')} style={{ height: `${Math.max(4, Math.min(100, value) * 0.28)}px` }} />
+          <span key={index} className={cn('w-[2px] rounded-full', index / bars.length <= ratio ? mine ? 'bg-white' : 'bg-brand' : mine ? 'bg-white/30' : 'bg-forest/20')} style={{ height: `${Math.max(4, Math.min(100, value) * 0.28)}px` }} />
         ))}
       </div>
       <span className={cn('shrink-0 text-[11px] tabular-nums', mine ? 'text-white/75' : 'text-muted')}>{clock(current > 0 ? current : duration)}</span>

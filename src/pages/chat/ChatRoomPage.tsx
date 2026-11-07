@@ -8,7 +8,7 @@ import { usePresence } from '@/store/presenceStore';
 import { listMine } from '@/lib/api/conversations';
 import { getPublicProfile } from '@/lib/api/profiles';
 import { AppError } from '@/lib/errors';
-import { formatLastSeen } from '@/lib/utils';
+import { formatLastSeen, firstName } from '@/lib/utils';
 import type { ConversationSummary, PublicProfile } from '@/types/db';
 
 export default function ChatRoomPage() {
@@ -39,7 +39,7 @@ export default function ChatRoomPage() {
       {conv && (
         <ChatRoom
           conversationId={id}
-          emptyText={person ? `Say hi to ${person.full_name.split(' ')[0]}.` : 'Say hi.'}
+          emptyText={person ? `Say hi to ${firstName(person.full_name) || person.full_name}.` : 'Say hi.'}
           canPin
           header={<ChatHeader person={person ?? null} online={!!conv.other_user_id && online.includes(conv.other_user_id)} />}
         />

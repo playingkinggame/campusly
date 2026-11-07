@@ -16,6 +16,22 @@ export function initials(name?: string | null): string {
   return parts.map((p) => p[0]?.toUpperCase() ?? '').join('') || '?';
 }
 
+/**
+ * Friendly first name for greetings.
+ * "A Yathin Kumar" -> "Yathin" (single-letter initials like "A" or "A." are skipped).
+ */
+export function firstName(name?: string | null): string {
+  const words = (name ?? '')
+    .trim()
+    .split(/\s+/)
+    .map((w) => w.replace(/[^\p{L}\p{N}'-]/gu, ''))
+    .filter(Boolean);
+  if (words.length === 0) return '';
+  const pick = words.find((w) => w.length > 1) ?? words[0] ?? '';
+  const tidy = pick.length > 1 && pick === pick.toUpperCase() ? pick.toLowerCase() : pick;
+  return tidy.charAt(0).toUpperCase() + tidy.slice(1);
+}
+
 export function timeAgo(iso?: string | null): string {
   if (!iso) return '';
   const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);

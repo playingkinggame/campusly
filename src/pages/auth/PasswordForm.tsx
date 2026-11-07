@@ -114,7 +114,7 @@ export function PasswordForm({ mode }: { mode: 'login' | 'signup' }) {
           </div>
         </div>
         {notice && <p role="status" className="text-sm text-forest">{notice}</p>}
-        {formError && <p role="alert" className="text-sm text-danger">{formError}</p>}
+        {formError && <p role="alert" className="text-sm text-danger-ink">{formError}</p>}
         <Button variant="secondary" size="lg" className="w-full" loading={resending}
           disabled={cooldown > 0} onClick={() => void resend(sentTo)}>
           {cooldown > 0 ? `Resend email in ${cooldown}s` : 'Resend email'}
@@ -154,7 +154,7 @@ export function PasswordForm({ mode }: { mode: 'login' | 'signup' }) {
         />
       )}
 
-      {formError && <p role="alert" className="rounded-2xl bg-danger/10 px-4 py-3 text-sm text-danger">{formError}</p>}
+      {formError && <p role="alert" className="rounded-2xl bg-danger/10 px-4 py-3 text-sm text-danger-ink">{formError}</p>}
       {notice && <p role="status" className="rounded-2xl bg-mint/60 px-4 py-3 text-sm text-forest">{notice}</p>}
       {needsConfirm && (
         <Button variant="secondary" size="md" className="w-full" loading={resending} disabled={cooldown > 0}

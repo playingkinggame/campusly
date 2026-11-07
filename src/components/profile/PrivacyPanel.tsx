@@ -57,7 +57,7 @@ function Toggle({
       disabled={busy}
       className={cn(
         'relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-60',
-        checked ? 'bg-forest' : 'bg-line',
+        checked ? 'bg-brand' : 'bg-line',
       )}
     >
       <span

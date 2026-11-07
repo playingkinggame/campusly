@@ -37,7 +37,7 @@ export default function ConfessionsPage() {
         empty={<EmptyState icon={<Ghost className="h-6 w-6" />} title="No confessions yet" text="Share something anonymous and wholesome." action={<Button size="sm" onClick={() => setOpen(true)}>Write a confession</Button>} />}>
         <ul className="space-y-3">
           {(state.data ?? []).map((c) => (
-            <li key={c.id}><Card className="!bg-white/70">
+            <li key={c.id}><Card className="!bg-surface/70">
               <div className="flex items-start justify-between gap-2"><p className="whitespace-pre-wrap text-[15px] leading-relaxed text-ink/90">{c.body}</p><PostActions targetType="confession" targetId={c.id} targetName="Confession" onChanged={() => void state.reload()} /></div>
               <p className="mt-2 text-xs text-muted">Anonymous · {timeAgo(c.created_at)}</p>
             </Card></li>

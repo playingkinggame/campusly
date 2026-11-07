@@ -42,10 +42,10 @@ export function PostActions({ targetType, targetId, targetName, authorId, author
         <summary className="flex h-8 w-8 cursor-pointer list-none items-center justify-center rounded-xl text-muted hover:bg-mint/60 [&::-webkit-details-marker]:hidden" aria-label="Post actions">
           <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
         </summary>
-        <div className="absolute right-0 z-30 mt-1 w-40 rounded-2xl border border-line bg-white p-1 shadow-xl">
+        <div className="absolute right-0 z-30 mt-1 w-40 rounded-2xl border border-line bg-surface p-1 shadow-xl">
           <button type="button" onClick={() => { close(); setReportOpen(true); }} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-forest hover:bg-mint/60"><Flag className="h-4 w-4" aria-hidden="true" /> Report</button>
-          {authorId && <button type="button" onClick={() => { close(); setBlockOpen(true); }} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-danger hover:bg-red-50"><Ban className="h-4 w-4" aria-hidden="true" /> Block author</button>}
-          {onDelete && <button type="button" onClick={() => { close(); void onDelete(); }} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-danger hover:bg-red-50"><Trash2 className="h-4 w-4" aria-hidden="true" /> Delete</button>}
+          {authorId && <button type="button" onClick={() => { close(); setBlockOpen(true); }} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-danger-ink hover:bg-danger-soft"><Ban className="h-4 w-4" aria-hidden="true" /> Block author</button>}
+          {onDelete && <button type="button" onClick={() => { close(); void onDelete(); }} className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-danger-ink hover:bg-danger-soft"><Trash2 className="h-4 w-4" aria-hidden="true" /> Delete</button>}
         </div>
       </details>
       <ReportDialog open={reportOpen} onClose={() => setReportOpen(false)} targetType={targetType} targetId={targetId} targetName={targetName} />

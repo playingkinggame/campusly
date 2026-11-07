@@ -78,7 +78,7 @@ export function AchievementCard({ achievement, isOwn, onEdit, onDelete }: Props)
               type="button"
               onClick={onDelete}
               aria-label={`Delete ${achievement.title}`}
-              className="rounded-full p-1.5 text-muted hover:bg-red-50 hover:text-danger"
+              className="rounded-full p-1.5 text-muted hover:bg-danger-soft hover:text-danger-ink"
             >
               <Trash2 className="h-4 w-4" aria-hidden="true" />
             </button>

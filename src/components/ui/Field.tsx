@@ -4,18 +4,18 @@ import { cn } from '@/lib/utils';
 interface FieldWrap { label: string; hint?: ReactNode; error?: string | null; required?: boolean }
 
 const base =
-  'w-full rounded-2xl border border-line bg-white/80 px-4 text-[15px] text-ink placeholder:text-muted/70 ' +
+  'w-full rounded-2xl border border-line bg-surface/80 px-4 text-[15px] text-ink placeholder:text-muted/70 ' +
   'focus:border-forest disabled:opacity-60';
 
 function Wrap({ id, label, hint, error, required, children }: FieldWrap & { id: string; children: ReactNode }) {
   return (
     <div className="space-y-1.5">
       <label htmlFor={id} className="block text-sm font-semibold text-forest">
-        {label}{required && <span className="text-danger" aria-hidden="true"> *</span>}
+        {label}{required && <span className="text-danger-ink" aria-hidden="true"> *</span>}
       </label>
       {children}
       {error ? (
-        <p id={`${id}-err`} role="alert" className="text-sm text-danger">{error}</p>
+        <p id={`${id}-err`} role="alert" className="text-sm text-danger-ink">{error}</p>
       ) : hint ? (
         <p id={`${id}-hint`} className="text-sm text-muted">{hint}</p>
       ) : null}
@@ -33,7 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
         ref={ref} id={id} required={required}
         aria-invalid={!!error || undefined}
         aria-describedby={error ? `${id}-err` : hint ? `${id}-hint` : undefined}
-        className={cn(base, 'h-12', error && 'border-danger', className)}
+        className={cn(base, 'h-12', error && 'border-danger-ink', className)}
         {...rest}
       />
     </Wrap>
@@ -50,7 +50,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
         ref={ref} id={id} required={required}
         aria-invalid={!!error || undefined}
         aria-describedby={error ? `${id}-err` : hint ? `${id}-hint` : undefined}
-        className={cn(base, 'min-h-24 py-3', error && 'border-danger', className)}
+        className={cn(base, 'min-h-24 py-3', error && 'border-danger-ink', className)}
         {...rest}
       />
     </Wrap>
@@ -66,7 +66,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
       <select
         ref={ref} id={id} required={required}
         aria-invalid={!!error || undefined}
-        className={cn(base, 'h-12', error && 'border-danger', className)}
+        className={cn(base, 'h-12', error && 'border-danger-ink', className)}
         {...rest}
       >
         {children}

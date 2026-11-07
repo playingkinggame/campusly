@@ -35,7 +35,7 @@ export function TagInput({ label, value, onChange, max, suggestions = [], placeh
       <label htmlFor={id} className="block text-sm font-semibold text-forest">
         {label} <span className="font-normal text-muted">({value.length}/{max})</span>
       </label>
-      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-line bg-white/80 p-2 focus-within:border-forest">
+      <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-line bg-surface/80 p-2 focus-within:border-forest">
         {value.map((t) => (
           <span key={t} className="inline-flex items-center gap-1 rounded-full bg-mint px-3 py-1 text-sm font-medium text-forest">
             {t}
@@ -55,7 +55,7 @@ export function TagInput({ label, value, onChange, max, suggestions = [], placeh
         <div className="flex flex-wrap gap-1.5" aria-label={`${label} suggestions`}>
           {left.map((s) => (
             <button key={s} type="button" onClick={() => add(s)}
-              className="rounded-full border border-line bg-white/70 px-2.5 py-1 text-xs text-forest hover:bg-mint">
+              className="rounded-full border border-line bg-surface/70 px-2.5 py-1 text-xs text-forest hover:bg-mint">
               + {s}
             </button>
           ))}

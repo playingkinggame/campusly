@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
 import { Brand } from '@/components/layout/Brand';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(60%_50%_at_50%_0%,#DAE7C7_0%,#F5F8EF_70%)] p-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-[radial-gradient(60%_50%_at_50%_0%,var(--color-mint)_0%,var(--color-cream)_70%)] p-4">
+      <div className="absolute right-3 top-3"><ThemeToggle /></div>
       <div className="w-full max-w-md space-y-6">
         <a href="/" className="flex justify-center" aria-label="Campusly home"><Brand /></a>
         <div className="glass space-y-5 p-6 sm:p-8">

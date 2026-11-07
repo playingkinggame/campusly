@@ -44,7 +44,7 @@ export function ProfileHeader({ profile, isOwn, actions }: Props) {
 
   return (
     <Card className="!p-0">
-      <div className="h-24 rounded-t-[16px] bg-forest" aria-hidden="true" />
+      <div className="h-24 rounded-t-[16px] bg-brand" aria-hidden="true" />
       <div className="px-4 pb-5 sm:px-6">
         <div className="-mt-12 flex flex-wrap items-end justify-between gap-3">
           <Avatar

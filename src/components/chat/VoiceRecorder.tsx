@@ -101,7 +101,7 @@ export function VoiceRecorder({ onRecorded, onCancel }: {
 
   if (error) {
     return (
-      <div className="flex items-center justify-between gap-2 rounded-2xl bg-red-50 px-3 py-2 text-sm text-danger">
+      <div className="flex items-center justify-between gap-2 rounded-2xl bg-danger-soft px-3 py-2 text-sm text-danger-ink">
         <span>{error}</span>
         <Button variant="ghost" size="sm" onClick={cancel}><X className="h-4 w-4" aria-hidden="true" /> Close</Button>
       </div>

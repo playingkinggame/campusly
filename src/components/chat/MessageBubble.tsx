@@ -47,7 +47,7 @@ function MediaFile({ path, name, mime }: { path: string; name: string | null; mi
 }
 
 function Action({ icon: Icon, label, onClick, danger }: { icon: typeof Reply; label: string; onClick: () => void; danger?: boolean }) {
-  return <button type="button" onClick={onClick} className={cn('flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium hover:bg-mint/60', danger ? 'text-danger' : 'text-forest')}><Icon className="h-4 w-4" aria-hidden="true" /> {label}</button>;
+  return <button type="button" onClick={onClick} className={cn('flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium hover:bg-mint/60', danger ? 'text-danger-ink' : 'text-forest')}><Icon className="h-4 w-4" aria-hidden="true" /> {label}</button>;
 }
 
 interface Props {
@@ -99,7 +99,7 @@ export function MessageBubble({ message, meId, isMine, showAuthor, canPin, onRep
       {showAuthor && !isMine && <Avatar path={message.sender?.avatar_path} name={message.sender?.full_name} size={28} className="mt-1" />}
       <div className={cn('flex max-w-[86%] flex-col sm:max-w-[76%]', isMine ? 'items-end' : 'items-start')}>
         {showAuthor && !isMine && <p className="mb-0.5 px-1 text-[11px] font-semibold text-muted">{message.sender?.full_name ?? 'Someone'}</p>}
-        <div className={cn('rounded-2xl px-3 py-2 text-sm shadow-sm', isMine ? 'rounded-br-md bg-forest text-white' : 'rounded-bl-md border border-line bg-white text-ink')}>
+        <div className={cn('rounded-2xl px-3 py-2 text-sm shadow-sm', isMine ? 'rounded-br-md bg-brand text-white' : 'rounded-bl-md border border-line bg-surface text-ink')}>
           {deleted ? (
             <p className={cn('italic', isMine ? 'text-white/75' : 'text-muted')}>This message was unsent</p>
           ) : (
@@ -133,7 +133,7 @@ export function MessageBubble({ message, meId, isMine, showAuthor, canPin, onRep
         {reactions.size > 0 && (
           <div className="mt-1 flex flex-wrap gap-1" aria-label="Reactions">
             {[...reactions.entries()].map(([emoji, count]) => (
-              <button key={emoji} type="button" onClick={() => onReact(message, emoji)} aria-label={`${emoji} ${count}${mineEmoji.has(emoji) ? ', including you' : ''}`} className={cn('rounded-full border px-2 py-0.5 text-xs', mineEmoji.has(emoji) ? 'border-forest bg-mint text-forest' : 'border-line bg-white text-muted hover:bg-mint/40')}>{emoji} {count}</button>
+              <button key={emoji} type="button" onClick={() => onReact(message, emoji)} aria-label={`${emoji} ${count}${mineEmoji.has(emoji) ? ', including you' : ''}`} className={cn('rounded-full border px-2 py-0.5 text-xs', mineEmoji.has(emoji) ? 'border-forest bg-mint text-forest' : 'border-line bg-surface text-muted hover:bg-mint/40')}>{emoji} {count}</button>
             ))}
           </div>
         )}
@@ -145,7 +145,7 @@ export function MessageBubble({ message, meId, isMine, showAuthor, canPin, onRep
           {!deleted && (
             <div className="flex flex-wrap gap-1.5" aria-label="React to this message">
               {['👍', '❤️', '😂', '😮', '😢', '🙏'].map((emoji) => (
-                <button key={emoji} type="button" onClick={() => closeThen(() => onReact(message, emoji))} className="rounded-xl border border-line bg-white px-3 py-1.5 text-lg hover:bg-mint/50" aria-label={`React with ${emoji}`}>{emoji}</button>
+                <button key={emoji} type="button" onClick={() => closeThen(() => onReact(message, emoji))} className="rounded-xl border border-line bg-surface px-3 py-1.5 text-lg hover:bg-mint/50" aria-label={`React with ${emoji}`}>{emoji}</button>
               ))}
             </div>
           )}
