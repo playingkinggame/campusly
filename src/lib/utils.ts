@@ -5,7 +5,9 @@ export function cn(...parts: Array<string | false | null | undefined>): string {
 }
 
 export function isVitEmail(email: string): boolean {
-  return new RegExp('^[a-z0-9._%+-]+' + VIT_EMAIL_DOMAIN.replace('.', '\\.') + '$', 'i').test(email.trim());
+  // escape EVERY dot in the domain (a plain .replace('.', ...) only escapes the first one)
+  const domain = VIT_EMAIL_DOMAIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp('^[a-z0-9._%+-]+' + domain + '$', 'i').test(email.trim());
 }
 
 export function initials(name?: string | null): string {

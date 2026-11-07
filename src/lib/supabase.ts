@@ -14,9 +14,10 @@ export const supabase = createClient(
     auth: {
       persistSession: true,
       autoRefreshToken: true,
-      // We sign in with a 6-digit code, not a link. Turning this off keeps the
-      // HashRouter (#/login) from being confused by auth tokens in the URL hash.
+      // Email links (confirm email / reset password) are handled by consumeAuthRedirect() in
+      // lib/api/auth.ts. Supabase's own URL detection stays off so it cannot fight the HashRouter (#/login).
       detectSessionInUrl: false,
+      flowType: 'implicit', // links carry tokens in the URL hash, which consumeAuthRedirect() reads
     },
     realtime: { params: { eventsPerSecond: 20 } },
   },

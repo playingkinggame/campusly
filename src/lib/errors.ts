@@ -22,13 +22,27 @@ export function friendlyError(e: unknown): string {
   if (low.includes('jwt expired') || low.includes('refresh token') || low.includes('not authenticated'))
     return 'Your session expired. Please log in again.';
 
-  // Sign-in / OTP
+  // Sign-in / sign-up (email + password)
   if (low.includes('database error saving new user') || low.includes('vitstudent'))
     return 'Only @vitstudent.ac.in email addresses can join Campusly.';
-  if (low.includes('signups not allowed') || low.includes('user not found'))
-    return 'No account found for this email. Please sign up first.';
-  if (low.includes('token has expired') || low.includes('otp') && low.includes('invalid') || low.includes('invalid token'))
-    return 'That code is wrong or has expired. Check it or ask for a new one.';
+  if (low.includes('invalid login credentials') || err.code === 'invalid_credentials')
+    return 'Wrong email or password. Please try again.';
+  if (low.includes('email not confirmed') || err.code === 'email_not_confirmed')
+    return 'Please confirm your email first. Check your inbox (and spam) for our link.';
+  if (low.includes('user already registered') || err.code === 'user_already_exists')
+    return 'An account with this email already exists. Please log in instead.';
+  if (low.includes('password should be at least') || low.includes('weak password') || err.code === 'weak_password')
+    return 'Choose a stronger password: at least 8 characters with a letter and a number.';
+  if (low.includes('different from the old password') || err.code === 'same_password')
+    return 'Choose a password you have not used before.';
+  if (low.includes('auth session missing'))
+    return 'This link has expired. Please request a new one.';
+  if (low.includes('signups not allowed'))
+    return 'Sign ups are turned off right now. Please try again later.';
+  if (low.includes('error sending') && low.includes('email'))
+    return 'We could not send the email. Please try again in a minute.';
+  if (low.includes('token has expired') || low.includes('invalid token'))
+    return 'That link has expired. Please request a new one.';
   if (low.includes('rate limit') || low.includes('too many requests') || err.status === 429)
     return 'Too many tries. Please wait a minute and try again.';
 

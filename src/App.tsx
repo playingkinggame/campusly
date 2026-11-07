@@ -10,6 +10,8 @@ import { Toaster } from '@/components/ui/Toaster';
 import { Spinner } from '@/components/ui/Feedback';
 import LoginPage from '@/pages/auth/LoginPage';
 import SignupPage from '@/pages/auth/SignupPage';
+import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from '@/pages/auth/ResetPasswordPage';
 import OnboardingPage from '@/pages/auth/OnboardingPage';
 import HomePage from '@/pages/HomePage';
 import NotFoundPage from '@/pages/NotFoundPage';
@@ -57,7 +59,10 @@ export default function App() {
           <Route element={<PublicOnlyRoute />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           </Route>
+          {/* Opened from the reset-link email, which signs the user in; so no PublicOnly guard here. */}
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route element={<OnboardingRoute />}>
             <Route path="/onboarding" element={<OnboardingPage />} />
           </Route>

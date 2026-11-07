@@ -2,8 +2,9 @@ import { create } from 'zustand';
 import { supabase, isConfigured } from '@/lib/supabase';
 import { friendlyError } from '@/lib/errors';
 import { checkIsAdmin, getMyProfile } from '@/lib/api/profiles';
-import { signOut as apiSignOut } from '@/lib/api/auth';
+import { consumeAuthRedirect, ensureMyProfile, signOut as apiSignOut } from '@/lib/api/auth';
 import { useUnread } from './unreadStore';
+import { toast } from './uiStore';
 import type { MyProfile } from '@/types/db';
 
 export type AuthStatus = 'loading' | 'signed_out' | 'needs_onboarding' | 'ready' | 'error';
@@ -26,11 +27,17 @@ let started = false;
 export const useAuth = create<AuthState>((set, get) => {
   async function loadFor(userId: string, email: string | null) {
     try {
-      const profile = await getMyProfile(userId);
-      if (!profile) throw new Error('Profile not found');
+      let profile = await getMyProfile(userId);
+      if (!profile) {
+        // account exists but its profile row is missing: create it, then try once more
+        await ensureMyProfile();
+        profile = await getMyProfile(userId);
+      }
+      if (!profile) throw new Error('We could not find your profile. Please run supabase/phase4_password_auth.sql, then log in again.');
       const isAdmin = profile.onboarded ? await checkIsAdmin() : false;
       set({ status: profile.onboarded ? 'ready' : 'needs_onboarding', userId, email, profile, isAdmin, error: null });
     } catch (e) {
+      console.error('[Campusly] could not load account after sign-in:', e);
       set({ status: 'error', userId, email, error: friendlyError(e) });
     }
   }
@@ -48,11 +55,21 @@ export const useAuth = create<AuthState>((set, get) => {
       started = true;
       if (!isConfigured) { set({ status: 'signed_out' }); return; }
 
-      supabase.auth.getSession().then(({ data }) => {
-        const s = data.session;
-        if (s) void loadFor(s.user.id, s.user.email ?? null);
-        else set({ status: 'signed_out' });
-      });
+      // If the page was opened from an email link (confirm email / reset password), sign in from it first.
+      consumeAuthRedirect()
+        .catch(() => null)
+        .then((redirect) => {
+          if (redirect?.kind === 'error') toast.error(redirect.message);
+          else if (redirect?.kind === 'confirmed') toast.success('Email confirmed. Welcome to Campusly!');
+          return supabase.auth.getSession();
+        })
+        .then(({ data }) => {
+          const s = data.session;
+          if (s) {
+            // the SIGNED_IN listener below may already have loaded this user
+            if (get().status === 'loading') void loadFor(s.user.id, s.user.email ?? null);
+          } else set({ status: 'signed_out' });
+        });
 
       supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_OUT' || !session) {

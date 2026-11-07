@@ -34,7 +34,21 @@ export function ProtectedRoute() {
 /** Login / signup: bounce away if already signed in. */
 export function PublicOnlyRoute() {
   const status = useAuth((s) => s.status);
+  const error = useAuth((s) => s.error);
+  const reload = useAuth((s) => s.reload);
+  const signOut = useAuth((s) => s.signOut);
   if (status === 'loading') return <FullPage><Spinner /></FullPage>;
+  // Signed in OK, but loading the account failed: say so instead of leaving the login form spinning.
+  if (status === 'error') {
+    return (
+      <FullPage>
+        <div className="glass max-w-md p-6">
+          <ErrorState message={error ?? 'You are signed in, but we could not load your account.'} onRetry={() => void reload()} />
+          <div className="text-center"><Button variant="ghost" size="sm" onClick={() => void signOut()}>Log out</Button></div>
+        </div>
+      </FullPage>
+    );
+  }
   if (status === 'ready') return <Navigate to="/" replace />;
   if (status === 'needs_onboarding') return <Navigate to="/onboarding" replace />;
   return <Outlet />;
