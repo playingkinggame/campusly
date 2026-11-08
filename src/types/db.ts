@@ -171,7 +171,14 @@ export interface Ride {
   id: string; author_id: string; origin: string; destination: string; depart_at: string; seats: number;
   cost_note: string | null; notes: string | null; status: 'open' | 'full' | 'closed'; created_at: string;
 }
-export interface ConfessionFeedRow { id: string; body: string; created_at: string }
+export interface ConfessionFeedRow { id: string; body: string; created_at: string; expires_at?: string | null }
+export type ConfessionScope = 'pending' | 'live' | 'expired' | 'all';
+/** What an ADMIN sees during moderation (students never get author fields). */
+export interface AdminConfession {
+  id: string; body: string; status: 'pending' | 'approved' | 'rejected'; created_at: string;
+  reviewed_at: string | null; expires_at: string | null;
+  author_id: string | null; author_username: string | null; author_name: string | null; author_reg_no: string | null;
+}
 export interface Notice { id: string; author_id: string | null; title: string; body: string; pinned: boolean; expires_at: string | null; created_at: string }
 export interface SeniorQuestion {
   id: string; asker_id: string; senior_id: string; question: string; answer: string | null;

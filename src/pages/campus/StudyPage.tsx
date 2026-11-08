@@ -6,12 +6,14 @@ import { Card } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui/Field';
 import { Modal } from '@/components/ui/Modal';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
 import { PostActions } from '@/components/campus/PostActions';
 import { useAsync } from '@/hooks/useAsync';
 import { useAuth } from '@/store/authStore';
 import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
 import { createStudyRoom, deleteStudyNote, deleteStudyRoom, listStudyNotes, listStudyRooms, studyNoteUrl, uploadStudyNote, type StudyRoomWithCreator } from '@/lib/api/campus';
+import { searchText, tokenize } from '@/lib/search';
 import { formatDateTime, timeAgo } from '@/lib/utils';
 
 export default function StudyPage() {
@@ -25,6 +27,15 @@ export default function StudyPage() {
   const [noteTitle, setNoteTitle] = useState('');
   const [noteFile, setNoteFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [query, setQuery] = useState('');
+  const [noteQuery, setNoteQuery] = useState('');
+
+  const tokens = tokenize(query);
+  const allRooms = rooms.data ?? [];
+  const roomRows = searchText(allRooms, query, (r) => [r.name, r.subject, r.description, r.creator?.full_name]);
+  const noteTokens = tokenize(noteQuery);
+  const allNotes = notes.data ?? [];
+  const noteRows = searchText(allNotes, noteQuery, (n) => [n.title, n.file_name, n.uploader?.full_name]);
 
   const create = async (e: FormEvent) => {
     e.preventDefault();
@@ -59,10 +70,12 @@ export default function StudyPage() {
         <div><h1 className="flex items-center gap-2 text-2xl font-bold text-forest sm:text-3xl"><BookOpen className="h-7 w-7" aria-hidden="true" /> Study rooms</h1><p className="text-sm text-muted">Subject rooms with shared notes.</p></div>
         <Button size="sm" onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" aria-hidden="true" /> New room</Button>
       </header>
-      <AsyncView loading={rooms.loading} error={rooms.error} onRetry={() => void rooms.reload()} hasData={!!rooms.data} isEmpty={!rooms.loading && !rooms.error && (rooms.data ?? []).length === 0}
-        empty={<EmptyState icon={<BookOpen className="h-6 w-6" />} title="No study rooms" text="Create a room for your subject and share notes." action={<Button size="sm" onClick={() => setCreateOpen(true)}>Create a room</Button>} />}>
+      <SearchInput value={query} onChange={setQuery} label="Search study rooms" placeholder="Search rooms by name or subject" />
+      <ResultCount n={roomRows.length} show={tokens.length > 0} />
+      <AsyncView loading={rooms.loading} error={rooms.error} onRetry={() => void rooms.reload()} hasData={!!rooms.data} isEmpty={!rooms.loading && !rooms.error && roomRows.length === 0}
+        empty={tokens.length > 0 && allRooms.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<BookOpen className="h-6 w-6" />} title="No study rooms" text="Create a room for your subject and share notes." action={<Button size="sm" onClick={() => setCreateOpen(true)}>Create a room</Button>} />}>
         <div className="grid gap-3 sm:grid-cols-2">
-          {(rooms.data ?? []).map((room) => (
+          {roomRows.map((room) => (
             <Card key={room.id} className="flex flex-col gap-2">
               <div className="flex items-start justify-between gap-2">
                 <div><h2 className="font-semibold text-forest">{room.name}</h2>{room.subject && <span className="rounded-full bg-mint px-2 py-0.5 text-[10px] font-semibold text-forest">{room.subject}</span>}</div>
@@ -86,9 +99,10 @@ export default function StudyPage() {
               <input aria-label="Note file" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.md,image/*" onChange={(e) => setNoteFile(e.target.files?.[0] ?? null)} className="block w-full text-sm text-muted" />
               <Button type="submit" size="sm" loading={uploading}>Upload</Button>
             </form>
-            <AsyncView loading={notes.loading} error={notes.error} onRetry={() => void notes.reload()} hasData={!!notes.data} isEmpty={(notes.data ?? []).length === 0} empty={<p className="py-3 text-center text-sm text-muted">No notes shared yet.</p>}>
+            {allNotes.length > 3 && <SearchInput value={noteQuery} onChange={setNoteQuery} label="Search notes" placeholder="Search notes" />}
+            <AsyncView loading={notes.loading} error={notes.error} onRetry={() => void notes.reload()} hasData={!!notes.data} isEmpty={noteRows.length === 0} empty={noteTokens.length > 0 ? <p className="py-3 text-center text-sm text-muted">No notes match “{noteQuery.trim()}”.</p> : <p className="py-3 text-center text-sm text-muted">No notes shared yet.</p>}>
               <ul className="space-y-2">
-                {(notes.data ?? []).map((note) => (
+                {noteRows.map((note) => (
                   <li key={note.id} className="flex items-center gap-2 rounded-2xl border border-line p-2">
                     <FileText className="h-5 w-5 shrink-0 text-forest" aria-hidden="true" />
                     <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-forest">{note.title}</p><p className="truncate text-xs text-muted">{note.uploader?.full_name ?? 'Someone'} · {formatDateTime(note.created_at)}</p></div>

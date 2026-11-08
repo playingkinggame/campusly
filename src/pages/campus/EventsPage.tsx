@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui/Field';
 import { Modal } from '@/components/ui/Modal';
 import { Tabs } from '@/components/ui/Tabs';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
 import { PostActions } from '@/components/campus/PostActions';
 import { useAsync } from '@/hooks/useAsync';
@@ -14,6 +15,7 @@ import { useAuth } from '@/store/authStore';
 import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
 import { createEvent, deleteEvent, listEvents, toggleGoing } from '@/lib/api/campus';
+import { searchText, tokenize } from '@/lib/search';
 import { formatDateTime } from '@/lib/utils';
 
 type Tab = 'upcoming' | 'past';
@@ -22,6 +24,7 @@ export default function EventsPage() {
   const me = useAuth((s) => s.userId) as string;
   const state = useAsync(listEvents, []);
   const [tab, setTab] = useState<Tab>('upcoming');
+  const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
@@ -29,7 +32,9 @@ export default function EventsPage() {
 
   const events = state.data ?? [];
   const now = Date.now();
-  const rows = events.filter((e) => tab === 'upcoming' ? new Date(e.starts_at).getTime() >= now : new Date(e.starts_at).getTime() < now);
+  const tabRows = events.filter((e) => tab === 'upcoming' ? new Date(e.starts_at).getTime() >= now : new Date(e.starts_at).getTime() < now);
+  const tokens = tokenize(query);
+  const rows = searchText(tabRows, query, (e) => [e.title, e.club, e.location, e.description, e.creator?.full_name]);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -58,8 +63,10 @@ export default function EventsPage() {
         <Button size="sm" onClick={() => setOpen(true)}><Plus className="h-4 w-4" aria-hidden="true" /> Post event</Button>
       </header>
       <Tabs label="Events" value={tab} onChange={(t) => setTab(t as Tab)} tabs={[{ id: 'upcoming', label: 'Upcoming' }, { id: 'past', label: 'Past' }]} />
+      <SearchInput value={query} onChange={setQuery} label="Search events" placeholder="Search events by title, club, place or host" />
+      <ResultCount n={rows.length} show={tokens.length > 0} />
       <AsyncView loading={state.loading} error={state.error} onRetry={() => void state.reload()} hasData={!!state.data} isEmpty={!state.loading && !state.error && rows.length === 0}
-        empty={<EmptyState icon={<CalendarDays className="h-6 w-6" />} title={tab === 'upcoming' ? 'No upcoming events' : 'No past events'} text="Be the first to post something." action={<Button size="sm" onClick={() => setOpen(true)}>Post an event</Button>} />}>
+        empty={tokens.length > 0 && tabRows.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<CalendarDays className="h-6 w-6" />} title={tab === 'upcoming' ? 'No upcoming events' : 'No past events'} text="Be the first to post something." action={<Button size="sm" onClick={() => setOpen(true)}>Post an event</Button>} />}>
         <div className="grid gap-3 sm:grid-cols-2">
           {rows.map((event) => (
             <Card key={event.id} className="flex flex-col gap-2">

@@ -83,3 +83,27 @@ export function highlightParts(text: string, tokens: string[]): Array<{ text: st
   }
   return parts;
 }
+
+/**
+ * Search any list by text fields (event titles, group names, ride places, ...).
+ * Every word typed must appear somewhere in the fields. Rows whose FIRST field starts with the word come first.
+ * An empty query returns the list unchanged.
+ */
+export function searchText<T>(rows: T[], query: string, pick: (row: T) => Array<string | number | null | undefined | string[]>): T[] {
+  const tokens = tokenize(query);
+  if (tokens.length === 0) return rows;
+  const scored: Array<{ row: T; rank: number; i: number }> = [];
+  rows.forEach((row, i) => {
+    const fields = pick(row).flatMap((f) => (Array.isArray(f) ? f : [f])).map((f) => fold(String(f ?? '')));
+    const all = fields.join(' \n ');
+    let rank = 0;
+    for (const t of tokens) {
+      if (!all.includes(t)) return; // this row does not match
+      const first = fields[0] ?? '';
+      rank += first.startsWith(t) ? 0 : first.split(/[\s._-]+/).some((w) => w.startsWith(t)) ? 1 : 2;
+    }
+    scored.push({ row, rank, i });
+  });
+  scored.sort((a, b) => a.rank - b.rank || a.i - b.i);
+  return scored.map((s) => s.row);
+}

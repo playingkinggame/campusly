@@ -3,6 +3,8 @@ import { Megaphone, Pin, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui/Field';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
+import { searchText, tokenize } from '@/lib/search';
 import { Modal } from '@/components/ui/Modal';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
 import { useAsync } from '@/hooks/useAsync';
@@ -17,6 +19,10 @@ export default function NoticesPage() {
   const state = useAsync(listNotices, []);
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [query, setQuery] = useState('');
+  const tokens = tokenize(query);
+  const allNotices = state.data ?? [];
+  const notices = searchText(allNotices, query, (n) => [n.title, n.body]);
   const [form, setForm] = useState({ title: '', body: '', pinned: false, expires_at: '' });
 
   const submit = async (e: FormEvent) => {
@@ -33,10 +39,12 @@ export default function NoticesPage() {
         <div><h1 className="flex items-center gap-2 text-2xl font-bold text-forest sm:text-3xl"><Megaphone className="h-7 w-7" aria-hidden="true" /> Notices</h1><p className="text-sm text-muted">Official updates from campus admins.</p></div>
         {isAdmin && <Button size="sm" onClick={() => setOpen(true)}><Plus className="h-4 w-4" aria-hidden="true" /> Post notice</Button>}
       </header>
-      <AsyncView loading={state.loading} error={state.error} onRetry={() => void state.reload()} hasData={!!state.data} isEmpty={!state.loading && !state.error && (state.data ?? []).length === 0}
-        empty={<EmptyState icon={<Megaphone className="h-6 w-6" />} title="No notices" text="Campus announcements will appear here." />}>
+      <SearchInput value={query} onChange={setQuery} label="Search notices" placeholder="Search notices" />
+      <ResultCount n={notices.length} show={tokens.length > 0} />
+      <AsyncView loading={state.loading} error={state.error} onRetry={() => void state.reload()} hasData={!!state.data} isEmpty={!state.loading && !state.error && notices.length === 0}
+        empty={tokens.length > 0 && allNotices.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<Megaphone className="h-6 w-6" />} title="No notices" text="Campus announcements will appear here." />}>
         <ul className="space-y-3">
-          {(state.data ?? []).map((n) => (
+          {notices.map((n) => (
             <li key={n.id}><Card className={n.pinned ? '!border-forest/30 !bg-mint/30' : ''}>
               <div className="flex items-start justify-between gap-2">
                 <div><h2 className="flex items-center gap-1.5 font-semibold text-forest">{n.pinned && <Pin className="h-4 w-4" aria-label="Pinned" />} {n.title}</h2><p className="text-xs text-muted">{timeAgo(n.created_at)}{n.expires_at ? ` · expires ${formatDateTime(n.expires_at)}` : ''}</p></div>

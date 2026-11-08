@@ -9,10 +9,12 @@ import { Input, Textarea } from '@/components/ui/Field';
 import { ConfirmDialog, Modal } from '@/components/ui/Modal';
 import { Tabs } from '@/components/ui/Tabs';
 import { ChatRoom } from '@/components/chat/ChatRoom';
+import { SearchInput } from '@/components/ui/SearchInput';
 import { useAsync } from '@/hooks/useAsync';
 import { useAuth } from '@/store/authStore';
 import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
+import { searchPeople, tokenize } from '@/lib/search';
 import { listAccepted } from '@/lib/api/connections';
 import { listPinned, unpinMessage } from '@/lib/api/chat';
 import {
@@ -41,6 +43,8 @@ export default function GroupDetailPage() {
   const [leaving, setLeaving] = useState(false);
   const [joining, setJoining] = useState(false);
   const [busyMember, setBusyMember] = useState<string | null>(null);
+  const [memberQuery, setMemberQuery] = useState('');
+  const [addQuery, setAddQuery] = useState('');
 
   const state = useAsync(async () => {
     const data = await getGroup(id);
@@ -56,6 +60,10 @@ export default function GroupDetailPage() {
   const group = state.data?.group;
   const role = state.data?.role ?? null;
   const members = state.data?.members ?? [];
+  const memberTokens = tokenize(memberQuery);
+  const memberRows = searchPeople(members, memberQuery, (m) => m.person);
+  const addable = (state.data?.connections ?? []).filter((c) => c.person && !members.some((m) => m.user_id === c.person!.id));
+  const addRows = searchPeople(addable, addQuery, (c) => c.person);
   const announcements = state.data?.announcements ?? [];
   const pinned = state.data?.pinned ?? [];
   const canManage = role === 'owner' || role === 'admin';
@@ -195,8 +203,10 @@ export default function GroupDetailPage() {
                     <h2 className="text-base font-semibold text-forest">Members</h2>
                     {canManage && <Button size="sm" onClick={() => setAddOpen(true)}><Plus className="h-4 w-4" aria-hidden="true" /> Add member</Button>}
                   </div>
+                  {members.length > 5 && <SearchInput value={memberQuery} onChange={setMemberQuery} label="Search members" placeholder="Search members" />}
+                  {memberTokens.length > 0 && memberRows.length === 0 && <p className="py-4 text-center text-sm text-muted">No member matches “{memberQuery.trim()}”.</p>}
                   <ul className="divide-y divide-line/70">
-                    {members.map((m) => m.person && (
+                    {memberRows.map((m) => m.person && (
                       <li key={m.user_id} className="flex flex-wrap items-center gap-3 py-2">
                         <Link to={`/u/${m.person.username}`}><Avatar path={m.person.avatar_path} name={m.person.full_name} size={38} /></Link>
                         <div className="min-w-0 flex-1"><Link to={`/u/${m.person.username}`} className="block truncate text-sm font-semibold text-forest">{m.person.full_name}</Link><p className="truncate text-xs text-muted">@{m.person.username} · {m.role}</p></div>
@@ -271,8 +281,9 @@ export default function GroupDetailPage() {
           </Modal>
 
           <Modal open={addOpen} title="Add a connection" onClose={() => setAddOpen(false)}>
+            {addable.length > 5 && <div className="mb-2"><SearchInput value={addQuery} onChange={setAddQuery} label="Search your connections" placeholder="Search your connections" /></div>}
             <ul className="space-y-1">
-              {(state.data?.connections ?? []).filter((c) => c.person && !members.some((m) => m.user_id === c.person!.id)).map((c) => c.person && (
+              {addRows.map((c) => c.person && (
                 <li key={c.id} className="flex items-center gap-3 rounded-xl p-2 hover:bg-mint/40">
                   <Avatar path={c.person.avatar_path} name={c.person.full_name} size={34} />
                   <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold">{c.person.full_name}</span><span className="block truncate text-xs text-muted">@{c.person.username}</span></span>
@@ -280,7 +291,8 @@ export default function GroupDetailPage() {
                 </li>
               ))}
             </ul>
-            {(state.data?.connections ?? []).filter((c) => c.person && !members.some((m) => m.user_id === c.person!.id)).length === 0 && <p className="py-4 text-center text-sm text-muted">No more connections to add.</p>}
+            {addable.length === 0 && <p className="py-4 text-center text-sm text-muted">No more connections to add.</p>}
+            {addable.length > 0 && addRows.length === 0 && <p className="py-4 text-center text-sm text-muted">No connection matches “{addQuery.trim()}”.</p>}
           </Modal>
 
           <ConfirmDialog open={leavingOpen} title="Leave this group?" text="You will stop receiving its messages. You can join again if it is public." confirmLabel="Leave" danger loading={leaving} onConfirm={() => void leave()} onClose={() => setLeavingOpen(false)} />

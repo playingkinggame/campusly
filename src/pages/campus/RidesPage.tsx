@@ -5,6 +5,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui/Field';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
 import { Modal } from '@/components/ui/Modal';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
 import { PostActions } from '@/components/campus/PostActions';
@@ -12,6 +13,7 @@ import { useAsync } from '@/hooks/useAsync';
 import { useAuth } from '@/store/authStore';
 import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
+import { searchText, tokenize } from '@/lib/search';
 import { createRide, deleteRide, listRides, setRideStatus } from '@/lib/api/campus';
 import { formatDateTime } from '@/lib/utils';
 
@@ -20,6 +22,10 @@ export default function RidesPage() {
   const state = useAsync(listRides, []);
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [query, setQuery] = useState('');
+  const tokens = tokenize(query);
+  const allRides = state.data ?? [];
+  const rides = searchText(allRides, query, (r) => [r.origin, r.destination, r.notes, r.cost_note, r.author?.full_name]);
   const [form, setForm] = useState({ origin: '', destination: '', depart_at: '', seats: '3', cost_note: '', notes: '' });
 
   const submit = async (e: FormEvent) => {
@@ -38,10 +44,12 @@ export default function RidesPage() {
         <div><h1 className="flex items-center gap-2 text-2xl font-bold text-forest sm:text-3xl"><Car className="h-7 w-7" aria-hidden="true" /> Rides</h1><p className="text-sm text-muted">Share a cab or find a seat.</p></div>
         <Button size="sm" onClick={() => setOpen(true)}><Plus className="h-4 w-4" aria-hidden="true" /> Offer a ride</Button>
       </header>
-      <AsyncView loading={state.loading} error={state.error} onRetry={() => void state.reload()} hasData={!!state.data} isEmpty={!state.loading && !state.error && (state.data ?? []).length === 0}
-        empty={<EmptyState icon={<Car className="h-6 w-6" />} title="No rides posted" text="Offer a seat or ask for one." action={<Button size="sm" onClick={() => setOpen(true)}>Post a ride</Button>} />}>
+      <SearchInput value={query} onChange={setQuery} label="Search rides" placeholder="Search by from, to, or name" />
+      <ResultCount n={rides.length} show={tokens.length > 0} />
+      <AsyncView loading={state.loading} error={state.error} onRetry={() => void state.reload()} hasData={!!state.data} isEmpty={!state.loading && !state.error && rides.length === 0}
+        empty={tokens.length > 0 && allRides.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<Car className="h-6 w-6" />} title="No rides posted" text="Offer a seat or ask for one." action={<Button size="sm" onClick={() => setOpen(true)}>Post a ride</Button>} />}>
         <div className="grid gap-3 sm:grid-cols-2">
-          {(state.data ?? []).map((ride) => (
+          {rides.map((ride) => (
             <Card key={ride.id} className="flex flex-col gap-2">
               <div className="flex items-start justify-between gap-2">
                 <div><h2 className="font-semibold text-forest">{ride.origin} → {ride.destination}</h2><p className="text-xs text-muted">{formatDateTime(ride.depart_at)} · {ride.seats} seats · {ride.status}</p></div>

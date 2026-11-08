@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
 import { Avatar } from '@/components/ui/Avatar';
@@ -6,12 +6,14 @@ import { Card } from '@/components/ui/Card';
 import { CountBadge } from '@/components/ui/Badge';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
 import { Button } from '@/components/ui/Button';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
 import { useAsync } from '@/hooks/useAsync';
 import { useAuth } from '@/store/authStore';
 import { usePresence } from '@/store/presenceStore';
 import { listMine } from '@/lib/api/conversations';
 import { getMiniProfiles } from '@/lib/api/profiles';
 import { subscribeChatList } from '@/lib/api/realtime';
+import { searchText, tokenize } from '@/lib/search';
 import { cn, timeAgo } from '@/lib/utils';
 import type { ConversationSummary, MiniProfile } from '@/types/db';
 
@@ -30,6 +32,7 @@ function preview(conv: ConversationSummary, me: string): string {
 export default function ChatListPage() {
   const me = useAuth((s) => s.userId) as string;
   const online = usePresence((s) => s.online);
+  const [query, setQuery] = useState('');
   const state = useAsync(async () => {
     const rows = await listMine();
     const people = await getMiniProfiles(rows.map((r) => r.other_user_id ?? ''));
@@ -48,7 +51,10 @@ export default function ChatListPage() {
     };
   }, [me, state.reload]);
 
-  const items = state.data ?? [];
+  const all = state.data ?? [];
+  const tokens = tokenize(query);
+  // like WhatsApp: search by person / group name, @username, or the last message
+  const items = searchText(all, query, ({ conv, person }) => [conv.type === 'group' ? conv.group_name : person?.full_name, person?.username, conv.last_message_unsent ? null : conv.last_message_body]);
 
   return (
     <div className="space-y-5">
@@ -60,6 +66,9 @@ export default function ChatListPage() {
         <Link to="/discover"><Button variant="secondary" size="sm">Find people</Button></Link>
       </header>
 
+      <SearchInput value={query} onChange={setQuery} label="Search chats" placeholder="Search chats by name or message" />
+      <ResultCount n={items.length} show={tokens.length > 0} />
+
       <Card className="!p-2">
         <AsyncView
           loading={state.loading}
@@ -67,7 +76,7 @@ export default function ChatListPage() {
           onRetry={() => void state.reload()}
           hasData={!!state.data}
           isEmpty={!state.loading && !state.error && items.length === 0}
-          empty={<EmptyState icon={<MessageCircle className="h-6 w-6" />} title="No chats yet" text="Connect with someone, then open their profile and tap Message." action={<Link to="/discover"><Button size="sm">Discover people</Button></Link>} />}
+          empty={tokens.length > 0 && all.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<MessageCircle className="h-6 w-6" />} title="No chats yet" text="Connect with someone, then open their profile and tap Message." action={<Link to="/discover"><Button size="sm">Discover people</Button></Link>} />}
         >
           <ul className="divide-y divide-line/70">
             {items.map(({ conv, person }) => {

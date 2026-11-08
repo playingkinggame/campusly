@@ -5,6 +5,8 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Textarea } from '@/components/ui/Field';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
+import { searchText, tokenize } from '@/lib/search';
 import { Modal } from '@/components/ui/Modal';
 import { Tabs } from '@/components/ui/Tabs';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
@@ -28,6 +30,12 @@ export default function SeniorsPage() {
   const [question, setQuestion] = useState('');
   const [saving, setSaving] = useState(false);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [query, setQuery] = useState('');
+  const tokens = tokenize(query);
+  const allSeniors = seniors.data ?? [];
+  const seniorRows = searchText(allSeniors, query, (s) => [s.full_name, s.username, s.branch, s.clubs, s.interests, s.bio]);
+  const allQuestions = tab === 'mine' ? mine.data ?? [] : incoming.data ?? [];
+  const questionRows = searchText(allQuestions, query, (q) => [q.other?.full_name, q.question, q.answer]);
 
   const ask = async (e: FormEvent) => {
     e.preventDefault();
@@ -47,12 +55,14 @@ export default function SeniorsPage() {
     <div className="space-y-5">
       <header><h1 className="flex items-center gap-2 text-2xl font-bold text-forest sm:text-3xl"><GraduationCap className="h-7 w-7" aria-hidden="true" /> Senior connect</h1><p className="text-sm text-muted">Ask seniors about courses, clubs and campus life.</p></header>
       <Tabs label="Senior connect" value={tab} onChange={(t) => setTab(t as Tab)} tabs={[{ id: 'seniors', label: 'Seniors' }, { id: 'mine', label: 'My questions', badge: mine.data?.length ?? 0 }, { id: 'incoming', label: 'Asked me', badge: incoming.data?.length ?? 0 }]} />
+      <SearchInput value={query} onChange={setQuery} label="Search" placeholder={tab === 'seniors' ? 'Search seniors by name, branch or interest' : 'Search questions'} />
+      <ResultCount n={tab === 'seniors' ? seniorRows.length : questionRows.length} show={tokens.length > 0} />
 
       {tab === 'seniors' && (
-        <AsyncView loading={seniors.loading} error={seniors.error} onRetry={() => void seniors.reload()} hasData={!!seniors.data} isEmpty={(seniors.data ?? []).length === 0}
-          empty={<EmptyState icon={<GraduationCap className="h-6 w-6" />} title="No seniors found" text="Seniors from earlier batches will appear here once they join." />}>
+        <AsyncView loading={seniors.loading} error={seniors.error} onRetry={() => void seniors.reload()} hasData={!!seniors.data} isEmpty={seniorRows.length === 0}
+          empty={tokens.length > 0 && allSeniors.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<GraduationCap className="h-6 w-6" />} title="No seniors found" text="Seniors from earlier batches will appear here once they join." />}>
           <div className="grid gap-3 sm:grid-cols-2">
-            {(seniors.data ?? []).map((s) => (
+            {seniorRows.map((s) => (
               <Card key={s.id} className="flex flex-col gap-2">
                 <div className="flex items-center gap-3"><Avatar path={s.avatar_path} name={s.full_name} size={46} /><div className="min-w-0"><Link to={`/u/${s.username}`} className="block truncate font-semibold text-forest">{s.full_name}</Link><p className="truncate text-xs text-muted">{s.branch ?? 'Branch not set'} · Batch {s.batch ?? '—'}</p></div></div>
                 {s.bio && <p className="line-clamp-2 text-sm text-muted">{s.bio}</p>}
@@ -64,10 +74,10 @@ export default function SeniorsPage() {
       )}
 
       {tab !== 'seniors' && (
-        <AsyncView loading={tab === 'mine' ? mine.loading : incoming.loading} error={tab === 'mine' ? mine.error : incoming.error} onRetry={() => void (tab === 'mine' ? mine.reload() : incoming.reload())} hasData={!!(tab === 'mine' ? mine.data : incoming.data)} isEmpty={(tab === 'mine' ? mine.data ?? [] : incoming.data ?? []).length === 0}
-          empty={<EmptyState icon={<MessageCircleQuestion className="h-6 w-6" />} title={tab === 'mine' ? 'No questions yet' : 'No questions asked to you'} text={tab === 'mine' ? 'Pick a senior and ask anything.' : 'Questions from juniors will appear here.'} />}>
+        <AsyncView loading={tab === 'mine' ? mine.loading : incoming.loading} error={tab === 'mine' ? mine.error : incoming.error} onRetry={() => void (tab === 'mine' ? mine.reload() : incoming.reload())} hasData={!!(tab === 'mine' ? mine.data : incoming.data)} isEmpty={questionRows.length === 0}
+          empty={tokens.length > 0 && allQuestions.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<MessageCircleQuestion className="h-6 w-6" />} title={tab === 'mine' ? 'No questions yet' : 'No questions asked to you'} text={tab === 'mine' ? 'Pick a senior and ask anything.' : 'Questions from juniors will appear here.'} />}>
           <ul className="space-y-3">
-            {(tab === 'mine' ? mine.data ?? [] : incoming.data ?? []).map((q) => (
+            {questionRows.map((q) => (
               <li key={q.id}><Card className="space-y-2">
                 <div className="flex items-center gap-2"><Avatar path={q.other?.avatar_path} name={q.other?.full_name} size={30} /><p className="text-sm font-semibold text-forest">{q.other?.full_name ?? 'A student'} · {timeAgo(q.created_at)}</p></div>
                 <p className="text-sm text-ink/90">{q.question}</p>

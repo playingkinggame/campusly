@@ -8,12 +8,14 @@ import { Input, Select, Textarea } from '@/components/ui/Field';
 import { Modal } from '@/components/ui/Modal';
 import { Tabs } from '@/components/ui/Tabs';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
 import { PostActions } from '@/components/campus/PostActions';
 import { useAsync } from '@/hooks/useAsync';
 import { useAuth } from '@/store/authStore';
 import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
 import { createLostFound, deleteLostFound, listLostFound, lostFoundImageUrl, resolveLostFound } from '@/lib/api/campus';
+import { searchText, tokenize } from '@/lib/search';
 import { timeAgo } from '@/lib/utils';
 
 type Tab = 'all' | 'lost' | 'found';
@@ -33,8 +35,11 @@ export default function LostFoundPage() {
   const [form, setForm] = useState({ kind: 'lost' as 'lost' | 'found', title: '', description: '', location: '' });
   const [file, setFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
+  const [query, setQuery] = useState('');
 
-  const rows = (state.data ?? []).filter((r) => tab === 'all' || r.kind === tab);
+  const tabRows = (state.data ?? []).filter((r) => tab === 'all' || r.kind === tab);
+  const tokens = tokenize(query);
+  const rows = searchText(tabRows, query, (r) => [r.title, r.description, r.location, r.kind, r.author?.full_name]);
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -52,8 +57,10 @@ export default function LostFoundPage() {
         <Button size="sm" onClick={() => setOpen(true)}><Plus className="h-4 w-4" aria-hidden="true" /> Post item</Button>
       </header>
       <Tabs label="Lost and found" value={tab} onChange={(t) => setTab(t as Tab)} tabs={[{ id: 'all', label: 'All' }, { id: 'lost', label: 'Lost' }, { id: 'found', label: 'Found' }]} />
+      <SearchInput value={query} onChange={setQuery} label="Search lost and found" placeholder="Search by item, place or description" />
+      <ResultCount n={rows.length} show={tokens.length > 0} />
       <AsyncView loading={state.loading} error={state.error} onRetry={() => void state.reload()} hasData={!!state.data} isEmpty={!state.loading && !state.error && rows.length === 0}
-        empty={<EmptyState icon={<PackageSearch className="h-6 w-6" />} title="Nothing here yet" text="Post a lost or found item." action={<Button size="sm" onClick={() => setOpen(true)}>Post an item</Button>} />}>
+        empty={tokens.length > 0 && tabRows.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<PackageSearch className="h-6 w-6" />} title="Nothing here yet" text="Post a lost or found item." action={<Button size="sm" onClick={() => setOpen(true)}>Post an item</Button>} />}>
         <div className="grid gap-3 sm:grid-cols-2">
           {rows.map((item) => (
             <Card key={item.id} className="flex flex-col gap-2">

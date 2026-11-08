@@ -1,5 +1,5 @@
 import { forwardRef, useId, type InputHTMLAttributes } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, SearchX, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { highlightParts } from '@/lib/search';
 
@@ -30,7 +30,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(function SearchIn
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        onKeyDown={(e) => { if (e.key === 'Escape' && value) { e.preventDefault(); onChange(''); } }}
+        onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); if (e.key === 'Escape' && value) { e.preventDefault(); onChange(''); } }}
         className="h-12 w-full rounded-2xl border border-line bg-surface/80 pl-12 pr-11 text-[15px] text-ink placeholder:text-muted/70 focus:border-forest [&::-webkit-search-cancel-button]:hidden"
         {...rest}
       />
@@ -57,4 +57,24 @@ export function Highlight({ text, tokens }: { text: string; tokens: string[] }) 
       )}
     </>
   );
+}
+
+/** Shown instead of an empty list when a search finds nothing. */
+export function NoResults({ query, onClear }: { query: string; onClear: () => void }) {
+  return (
+    <div className="flex flex-col items-center gap-2 px-4 py-12 text-center">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-mint text-forest" aria-hidden="true">
+        <SearchX className="h-6 w-6" />
+      </div>
+      <h3 className="text-lg font-semibold text-forest">No results</h3>
+      <p className="max-w-sm text-sm text-muted">Nothing matches “{query.trim()}”. Check the spelling or try fewer letters.</p>
+      <button type="button" onClick={onClear} className="mt-1 rounded-xl bg-mint px-4 py-2 text-sm font-semibold text-forest hover:bg-mint/70">Clear search</button>
+    </div>
+  );
+}
+
+/** Small "3 found" line under a search box. */
+export function ResultCount({ n, show }: { n: number; show: boolean }) {
+  if (!show) return null;
+  return <p className="-mt-2 text-xs text-muted" role="status" aria-live="polite">{n} {n === 1 ? 'result' : 'results'}</p>;
 }

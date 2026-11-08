@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
 import { Tabs } from '@/components/ui/Tabs';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
 import { useAsync } from '@/hooks/useAsync';
 import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
+import { searchText, tokenize } from '@/lib/search';
 import { joinGroup, listMyGroups, listPublicGroups, type GroupWithRole } from '@/lib/api/groups';
 import type { Group } from '@/types/db';
 
@@ -17,6 +19,7 @@ type Tab = 'mine' | 'browse';
 export default function GroupsPage() {
   const [tab, setTab] = useState<Tab>('mine');
   const [joining, setJoining] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
   const state = useAsync(async () => {
     const [mine, publicGroups] = await Promise.all([listMyGroups(), listPublicGroups()]);
     const mineIds = new Set(mine.map((g) => g.id));
@@ -35,7 +38,9 @@ export default function GroupsPage() {
 
   const mine = state.data?.mine ?? [];
   const browse = state.data?.browse ?? [];
-  const rows: Array<GroupWithRole | Group> = tab === 'mine' ? mine : browse;
+  const tabRows: Array<GroupWithRole | Group> = tab === 'mine' ? mine : browse;
+  const tokens = tokenize(query);
+  const rows = searchText(tabRows, query, (g) => [g.name, g.description]);
 
   return (
     <div className="space-y-5">
@@ -52,8 +57,11 @@ export default function GroupsPage() {
         { id: 'browse', label: 'Browse public', badge: browse.length },
       ]} />
 
+      <SearchInput value={query} onChange={setQuery} label="Search groups" placeholder={tab === 'mine' ? 'Search your groups' : 'Search public groups by name or topic'} />
+      <ResultCount n={rows.length} show={tokens.length > 0} />
+
       <AsyncView loading={state.loading} error={state.error} onRetry={() => void state.reload()} hasData={!!state.data} isEmpty={!state.loading && !state.error && rows.length === 0}
-        empty={<EmptyState icon={<Users className="h-6 w-6" />} title={tab === 'mine' ? 'No groups yet' : 'No public groups yet'} text={tab === 'mine' ? 'Create one with your connections, or join a public group.' : 'Public groups will appear here.'} action={tab === 'mine' ? <Link to="/groups/new"><Button size="sm">Create a group</Button></Link> : undefined} />}>
+        empty={tokens.length > 0 && tabRows.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<Users className="h-6 w-6" />} title={tab === 'mine' ? 'No groups yet' : 'No public groups yet'} text={tab === 'mine' ? 'Create one with your connections, or join a public group.' : 'Public groups will appear here.'} action={tab === 'mine' ? <Link to="/groups/new"><Button size="sm">Create a group</Button></Link> : undefined} />}>
         <div className="grid gap-3 sm:grid-cols-2">
           {rows.map((group) => (
             <Card key={group.id} className="flex h-full flex-col gap-3">

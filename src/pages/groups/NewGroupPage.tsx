@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input, Select, Textarea } from '@/components/ui/Field';
 import { AsyncView } from '@/components/ui/Feedback';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
+import { searchPeople, tokenize } from '@/lib/search';
 import { useAsync } from '@/hooks/useAsync';
 import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
@@ -19,6 +21,7 @@ export default function NewGroupPage() {
   const [visibility, setVisibility] = useState<'private' | 'public'>('private');
   const [selected, setSelected] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
+  const [query, setQuery] = useState('');
 
   const toggle = (id: string) => setSelected((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
 
@@ -35,6 +38,8 @@ export default function NewGroupPage() {
   };
 
   const people = (connections.data ?? []).filter((c) => c.person);
+  const tokens = tokenize(query);
+  const shown = searchPeople(people, query, (c) => c.person);
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
@@ -54,10 +59,12 @@ export default function NewGroupPage() {
 
           <div>
             <p className="mb-2 text-sm font-semibold text-forest">Add connections ({selected.length} selected)</p>
+            {people.length > 0 && <div className="mb-2"><SearchInput value={query} onChange={setQuery} label="Search your connections" placeholder="Search your connections" /></div>}
             <AsyncView loading={connections.loading} error={connections.error} onRetry={() => void connections.reload()} hasData={!!connections.data} isEmpty={people.length === 0}
               empty={<p className="rounded-2xl bg-mint/40 p-3 text-sm text-muted">No accepted connections yet. You can create the group and add people later.</p>}>
+              {tokens.length > 0 && shown.length === 0 ? <p className="rounded-2xl bg-mint/40 p-3 text-sm text-muted">No connection matches “{query.trim()}”.</p> : (
               <ul className="max-h-64 space-y-1 overflow-y-auto rounded-2xl border border-line p-1">
-                {people.map((c) => c.person && (
+                {shown.map((c) => c.person && (
                   <li key={c.id}>
                     <label className="flex cursor-pointer items-center gap-3 rounded-xl p-2 hover:bg-mint/40">
                       <input type="checkbox" checked={selected.includes(c.person.id)} onChange={() => toggle(c.person!.id)} className="h-4 w-4 accent-forest" />
@@ -67,6 +74,7 @@ export default function NewGroupPage() {
                   </li>
                 ))}
               </ul>
+              )}
             </AsyncView>
           </div>
 

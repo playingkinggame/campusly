@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Input, Textarea } from '@/components/ui/Field';
 import { Modal } from '@/components/ui/Modal';
 import { Tabs } from '@/components/ui/Tabs';
+import { NoResults, ResultCount, SearchInput } from '@/components/ui/SearchInput';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
 import { PostActions } from '@/components/campus/PostActions';
 import { useAsync } from '@/hooks/useAsync';
@@ -18,6 +19,7 @@ import {
   matchTeammates, respondTeammateInvite, setTeammatePostStatus, type TeammatePostWithAuthor,
 } from '@/lib/api/campus';
 import type { TeammateMatch } from '@/types/db';
+import { searchText, tokenize } from '@/lib/search';
 import { timeAgo } from '@/lib/utils';
 
 type Tab = 'board' | 'invites';
@@ -37,9 +39,13 @@ export default function TeammatesPage() {
   const [matches, setMatches] = useState<TeammateMatch[] | null>(null);
   const [matchLoading, setMatchLoading] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
 
-  const posts = board.data ?? [];
-  const invites = inviteTab === 'incoming' ? incoming.data ?? [] : outgoing.data ?? [];
+  const tokens = tokenize(query);
+  const allPosts = board.data ?? [];
+  const posts = searchText(allPosts, query, (p) => [p.title, p.event_name, p.skills_needed, p.description, p.author?.full_name]);
+  const inviteList = inviteTab === 'incoming' ? incoming.data ?? [] : outgoing.data ?? [];
+  const invites = searchText(inviteList, query, ({ invite, post, other }) => [other?.full_name, other?.username, post?.title, invite.message]);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -89,10 +95,12 @@ export default function TeammatesPage() {
         <Button size="sm" onClick={() => setOpen(true)}><Plus className="h-4 w-4" aria-hidden="true" /> Post</Button>
       </header>
       <Tabs label="Teammates" value={tab} onChange={(t) => setTab(t as Tab)} tabs={[{ id: 'board', label: 'Board' }, { id: 'invites', label: 'Invites', badge: (incoming.data?.length ?? 0) + (outgoing.data?.length ?? 0) }]} />
+      <SearchInput value={query} onChange={setQuery} label="Search teammates" placeholder={tab === 'board' ? 'Search by project, skill or name' : 'Search invites by name or project'} />
+      <ResultCount n={tab === 'board' ? posts.length : invites.length} show={tokens.length > 0} />
 
       {tab === 'board' ? (
         <AsyncView loading={board.loading} error={board.error} onRetry={() => void board.reload()} hasData={!!board.data} isEmpty={!board.loading && !board.error && posts.length === 0}
-          empty={<EmptyState icon={<Lightbulb className="h-6 w-6" />} title="No teammate posts" text="Post what you are building and who you need." action={<Button size="sm" onClick={() => setOpen(true)}>Create a post</Button>} />}>
+          empty={tokens.length > 0 && allPosts.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<Lightbulb className="h-6 w-6" />} title="No teammate posts" text="Post what you are building and who you need." action={<Button size="sm" onClick={() => setOpen(true)}>Create a post</Button>} />}>
           <div className="grid gap-3 sm:grid-cols-2">
             {posts.map((post) => (
               <Card key={post.id} className="flex flex-col gap-2">
@@ -116,7 +124,7 @@ export default function TeammatesPage() {
         <>
           <Tabs label="Invite direction" value={inviteTab} onChange={(t) => setInviteTab(t as InviteTab)} tabs={[{ id: 'incoming', label: 'Received' }, { id: 'outgoing', label: 'Sent' }]} />
           <AsyncView loading={incoming.loading || outgoing.loading} error={incoming.error || outgoing.error} onRetry={() => void Promise.all([incoming.reload(), outgoing.reload()])} hasData={!!(incoming.data && outgoing.data)} isEmpty={invites.length === 0}
-            empty={<EmptyState icon={<Users className="h-6 w-6" />} title={inviteTab === 'incoming' ? 'No invites received' : 'No invites sent'} text="Team invites will appear here." />}>
+            empty={tokens.length > 0 && inviteList.length > 0 ? <NoResults query={query} onClear={() => setQuery('')} /> : <EmptyState icon={<Users className="h-6 w-6" />} title={inviteTab === 'incoming' ? 'No invites received' : 'No invites sent'} text="Team invites will appear here." />}>
             <ul className="space-y-2">
               {invites.map(({ invite, post, other }) => (
                 <li key={invite.id}><Card className="flex flex-wrap items-center gap-3">
