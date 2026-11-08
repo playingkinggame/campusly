@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { UserMinus, UserPlus, Users } from 'lucide-react';
+import { SearchX, UserMinus, UserPlus, Users } from 'lucide-react';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { AsyncView, EmptyState } from '@/components/ui/Feedback';
 import { ConfirmDialog } from '@/components/ui/Modal';
 import { Tabs } from '@/components/ui/Tabs';
+import { Highlight, SearchInput } from '@/components/ui/SearchInput';
 import { MessageButton } from '@/components/social/MessageButton';
 import { useAsync } from '@/hooks/useAsync';
 import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
 import { listAccepted, listIncoming, listOutgoing, removeConnection, respond, type ConnectionWithPerson } from '@/lib/api/connections';
+import { searchPeople, tokenize } from '@/lib/search';
 import { timeAgo } from '@/lib/utils';
 import type { MiniProfile } from '@/types/db';
 
@@ -21,6 +23,7 @@ export default function RequestsPage() {
   const [tab, setTab] = useState<TabId>('incoming');
   const [busy, setBusy] = useState<string | null>(null);
   const [removing, setRemoving] = useState<ConnectionWithPerson | null>(null);
+  const [query, setQuery] = useState('');
 
   const state = useAsync(async () => {
     const [incoming, outgoing, accepted] = await Promise.all([listIncoming(), listOutgoing(), listAccepted()]);
@@ -28,9 +31,13 @@ export default function RequestsPage() {
   }, []);
 
   const lists = state.data ?? { incoming: [], outgoing: [], accepted: [] };
-  const rows = (lists[tab] as ConnectionWithPerson[]).filter(
+  const allRows = (lists[tab] as ConnectionWithPerson[]).filter(
     (row): row is ConnectionWithPerson & { person: MiniProfile } => row.person !== null,
   );
+  // WhatsApp-style search: type "sr" and every name or username with "sr" shows up, best matches first
+  const tokens = tokenize(query);
+  const searching = tokens.length > 0;
+  const rows = searchPeople(allRows, query, (r) => r.person);
 
   const accept = async (row: ConnectionWithPerson) => {
     setBusy(`accept:${row.id}`);
@@ -93,13 +100,27 @@ export default function RequestsPage() {
         ]}
       />
 
+      <SearchInput
+        value={query}
+        onChange={setQuery}
+        label="Search people in this list"
+        placeholder={tab === 'accepted' ? 'Search your connections by name or @username' : 'Search by name or @username'}
+      />
+      {searching && !state.loading && rows.length > 0 && (
+        <p className="-mt-2 text-xs text-muted" role="status" aria-live="polite">
+          {rows.length} {rows.length === 1 ? 'person' : 'people'} found
+        </p>
+      )}
+
       <AsyncView
         loading={state.loading}
         error={state.error}
         onRetry={() => void state.reload()}
         hasData={!!state.data}
         isEmpty={!state.loading && !state.error && rows.length === 0}
-        empty={emptyForTab()}
+        empty={searching && allRows.length > 0
+          ? <EmptyState icon={<SearchX className="h-6 w-6" />} title="No one found" text={`Nobody in this list matches "${query.trim()}". Check the spelling or try fewer letters.`} action={<Button size="sm" variant="secondary" onClick={() => setQuery('')}>Clear search</Button>} />
+          : emptyForTab()}
       >
         <Card className="!p-2">
           <ul className="divide-y divide-line/70">
@@ -109,8 +130,8 @@ export default function RequestsPage() {
                   <Avatar path={row.person.avatar_path} name={row.person.full_name} size={44} />
                 </Link>
                 <div className="min-w-0 flex-1">
-                  <Link to={`/u/${row.person.username}`} className="block truncate text-sm font-semibold text-forest hover:underline">{row.person.full_name}</Link>
-                  <p className="truncate text-xs text-muted">@{row.person.username}</p>
+                  <Link to={`/u/${row.person.username}`} className="block truncate text-sm font-semibold text-forest hover:underline"><Highlight text={row.person.full_name ?? ''} tokens={tokens} /></Link>
+                  <p className="truncate text-xs text-muted">@<Highlight text={row.person.username ?? ''} tokens={tokens} /></p>
                   <p className="text-xs text-muted">
                     {tab === 'accepted' ? 'Connected' : `${tab === 'incoming' ? 'Asked' : 'Sent'} ${timeAgo(row.created_at)}`}
                   </p>
