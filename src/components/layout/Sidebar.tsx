@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Palette } from 'lucide-react';
 import { useAuth } from '@/store/authStore';
 import { useUnread } from '@/store/unreadStore';
 import { Avatar } from '@/components/ui/Avatar';
@@ -52,11 +52,11 @@ export function Sidebar() {
             <span className="block truncate text-xs text-muted">@{profile?.username}</span>
           </span>
         </NavLink>
-        <NavLink to="/settings" className={({ isActive }) => cn(
+        <NavLink to="/theme" className={({ isActive }) => cn(
           'flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors',
           isActive ? 'bg-brand text-on-brand' : 'text-muted hover:bg-mint/70',
         )}>
-          <Settings className="h-5 w-5" aria-hidden="true" /> Settings
+          <Palette className="h-5 w-5" aria-hidden="true" /> Theme
         </NavLink>
         <div className="flex items-center gap-1">
           <button type="button" onClick={() => void signOut()}

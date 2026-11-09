@@ -7,8 +7,8 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-forest sm:text-3xl">Settings</h1>
-        <p className="text-sm text-muted">Make Campusly look and feel the way you like.</p>
+        <h1 className="text-2xl font-bold text-forest sm:text-3xl">Theme</h1>
+        <p className="text-sm text-muted">Choose how Campusly looks and feels.</p>
       </div>
 
       <Card>

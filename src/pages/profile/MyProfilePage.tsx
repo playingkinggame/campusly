@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Pencil, Settings } from 'lucide-react';
+import { Palette, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/Feedback';
 import { ProfileView } from '@/components/profile/ProfileView';
@@ -54,9 +54,9 @@ export default function MyProfilePage() {
               <Pencil className="h-4 w-4" aria-hidden="true" /> Edit profile
             </Button>
           </Link>
-          <Link to="/settings">
+          <Link to="/theme">
             <Button size="sm" variant="secondary">
-              <Settings className="h-4 w-4" aria-hidden="true" /> Settings
+              <Palette className="h-4 w-4" aria-hidden="true" /> Theme
             </Button>
           </Link>
         </div>

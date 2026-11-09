@@ -45,7 +45,7 @@ export default function EditProfilePage() {
             <h2 className="text-lg font-bold text-forest">Appearance &amp; Themes</h2>
             <p className="text-sm text-muted">Pick one of six themes for your Campusly.</p>
           </div>
-          <Link to="/settings" className="shrink-0 text-sm font-semibold text-forest hover:underline">Open settings</Link>
+          <Link to="/theme" className="shrink-0 text-sm font-semibold text-forest hover:underline">Open theme</Link>
         </div>
       </Card>
 

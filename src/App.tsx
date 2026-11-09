@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { isConfigured } from '@/lib/supabase';
 import { useAuth } from '@/store/authStore';
 import { AdminRoute, OnboardingRoute, ProtectedRoute, PublicOnlyRoute } from '@/components/layout/Guards';
@@ -91,7 +91,8 @@ export default function App() {
               <Route path="/confessions" element={<Lazy><ConfessionsPage /></Lazy>} />
               <Route path="/seniors" element={<Lazy><SeniorsPage /></Lazy>} />
               <Route path="/notices" element={<Lazy><NoticesPage /></Lazy>} />
-              <Route path="/settings" element={<Lazy><SettingsPage /></Lazy>} />
+              <Route path="/theme" element={<Lazy><SettingsPage /></Lazy>} />
+              <Route path="/settings" element={<Navigate to="/theme" replace />} />
               <Route element={<AdminRoute />}>
                 <Route path="/admin" element={<Lazy><AdminPage /></Lazy>} />
               </Route>
