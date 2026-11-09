@@ -9,6 +9,7 @@ import {
   MIN_PASSWORD_LENGTH, checkPassword, cleanEmail, passwordProblem,
   resendConfirmation, signInWithPassword, signUpWithPassword,
 } from '@/lib/api/auth';
+import { shakeAuthCard } from '@/components/auth/authEvents';
 import { isVitEmail } from '@/lib/utils';
 import { VIT_EMAIL_DOMAIN } from '@/lib/constants';
 
@@ -70,7 +71,7 @@ export function PasswordForm({ mode }: { mode: 'login' | 'signup' }) {
     } else if (!password) {
       setPasswordError('Enter your password.'); bad = true;
     }
-    if (bad) return;
+    if (bad) { shakeAuthCard(); return; }
 
     setBusy(true);
     try {
@@ -85,6 +86,7 @@ export function PasswordForm({ mode }: { mode: 'login' | 'signup' }) {
       if (err instanceof AppError && err.code === 'email_not_confirmed') setNeedsConfirm(true);
       setFormError(friendlyError(err));
       setBusy(false);
+      shakeAuthCard();
     }
   };
 

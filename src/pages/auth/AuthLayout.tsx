@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Brand } from '@/components/layout/Brand';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { TiltCard } from '@/components/auth/TiltCard';
 
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
   return (
@@ -8,13 +9,15 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
       <div className="absolute right-3 top-3"><ThemeToggle /></div>
       <div className="w-full max-w-md space-y-6">
         <a href="/" className="flex justify-center" aria-label="Campusly home"><Brand /></a>
-        <div className="glass space-y-5 p-6 sm:p-8">
-          <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-forest">{title}</h1>
-            <p className="text-sm text-muted">{subtitle}</p>
+        <TiltCard>
+          <div className="glass space-y-5 p-6 sm:p-8">
+            <div className="space-y-1">
+              <h1 className="text-2xl font-bold text-forest">{title}</h1>
+              <p className="text-sm text-muted">{subtitle}</p>
+            </div>
+            {children}
           </div>
-          {children}
-        </div>
+        </TiltCard>
         <p className="text-center text-xs text-muted">Made only for VIT Chennai students. Not affiliated with VIT.</p>
       </div>
     </div>
