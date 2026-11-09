@@ -1,11 +1,36 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
+import { buildBootScript, buildThemeCss } from './src/themes/theme-css';
+
+/**
+ * Inlines every theme's colour variables plus a tiny boot script into app.html (the app, not the
+ * landing page). The saved theme is therefore applied before the first paint: no flash of the wrong
+ * theme. The source of truth for the colours is src/themes/; this only serialises it.
+ */
+function campuslyThemes(): Plugin {
+  return {
+    name: 'campusly-themes',
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html, ctx) {
+        if (path.basename(ctx.filename) !== 'app.html') return html;
+        return {
+          html,
+          tags: [
+            { tag: 'style', attrs: { id: 'campusly-themes' }, children: buildThemeCss(), injectTo: 'head-prepend' },
+            { tag: 'script', children: buildBootScript(), injectTo: 'head-prepend' },
+          ],
+        };
+      },
+    },
+  };
+}
 
 // Two pages: index.html = landing page, app.html = the Campusly app (src/main.tsx)
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), campuslyThemes()],
   resolve: {
     alias: { '@': path.resolve(__dirname, 'src') },
   },

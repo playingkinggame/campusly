@@ -3,20 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <script>
-      // Apply the saved theme before the page paints (prevents a white flash in dark mode).
-      (function () {
-        try {
-          var pref = localStorage.getItem('campusly-theme') || 'system';
-          var dark = pref === 'dark' || (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
-        } catch (e) {}
-      })();
-    </script>
+    <!-- The saved theme's colours and boot script are injected here at build time (vite.config.ts, src/themes/). -->
     <title>Campusly</title>
     <meta name="description" content="Campusly: the calm social and chat app for VIT Chennai students." />
-    <meta name="theme-color" content="#08482D" />
+    <meta name="theme-color" content="#090B14" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
     <link rel="apple-touch-icon" href="/icons/icon.svg" />
