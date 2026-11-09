@@ -203,7 +203,7 @@ export function ProfileForm({ mode, initial, onSaved, onCancel }: Props) {
           {([['day_scholar', 'Day scholar'], ['hosteller', 'Hosteller']] as const).map(([val, label]) => (
             <label key={val} className={cn(
               'flex cursor-pointer items-center justify-center rounded-2xl border px-4 py-3 text-sm font-semibold has-[:focus-visible]:outline has-[:focus-visible]:outline-[3px] has-[:focus-visible]:outline-forest',
-              residence === val ? 'border-forest bg-brand text-white' : 'border-line bg-surface/80 text-forest hover:bg-mint/50',
+              residence === val ? 'border-forest bg-brand text-on-brand' : 'border-line bg-surface/80 text-forest hover:bg-mint/50',
             )}>
               <input type="radio" name="residence" value={val} checked={residence === val} onChange={() => setResidence(val)} className="sr-only" />
               {label}

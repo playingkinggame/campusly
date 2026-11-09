@@ -1,12 +1,18 @@
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/store/themeStore';
+import { getTheme } from '@/themes/theme-config';
 import { cn } from '@/lib/utils';
 
-/** Small sun/moon button: switches between light and dark. */
+/**
+ * Small sun/moon button for Campusly Original (the only theme with a light and a dark version).
+ * The other five themes are dark-only, so the button hides itself; pick them in Settings.
+ */
 export function ThemeToggle({ className }: { className?: string }) {
-  const resolved = useTheme((s) => s.resolved);
+  const themeId = useTheme((s) => s.themeId);
+  const scheme = useTheme((s) => s.scheme);
   const toggle = useTheme((s) => s.toggle);
-  const isDark = resolved === 'dark';
+  if (!getTheme(themeId).adaptive) return null;
+  const isDark = scheme === 'dark';
   return (
     <button
       type="button"

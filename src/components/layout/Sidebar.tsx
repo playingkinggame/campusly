@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LogOut } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { useAuth } from '@/store/authStore';
 import { useUnread } from '@/store/unreadStore';
 import { Avatar } from '@/components/ui/Avatar';
@@ -16,7 +16,7 @@ function Item({ item, badge }: { item: NavItem; badge: number }) {
       to={item.to} end={item.to === '/'}
       className={({ isActive }) => cn(
         'flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors',
-        isActive ? 'bg-brand text-white' : 'text-forest/80 hover:bg-mint/70',
+        isActive ? 'bg-brand text-on-brand' : 'text-forest/80 hover:bg-mint/70',
       )}
     >
       <Icon className="h-5 w-5" aria-hidden="true" />
@@ -34,7 +34,7 @@ export function Sidebar() {
   const badgeOf = (i: NavItem) => (i.badge === 'chat' ? unread.chat : i.badge === 'requests' ? unread.requests : 0);
 
   return (
-    <aside className="hidden h-screen w-64 shrink-0 flex-col gap-4 border-r border-line bg-surface/50 p-4 md:flex">
+    <aside className="hidden h-screen w-64 shrink-0 flex-col gap-4 border-r border-line bg-sidebar p-4 md:flex">
       <div className="px-2 pt-1"><Brand /></div>
       <nav aria-label="Main" className="flex flex-col gap-1">
         {SIDEBAR_MAIN.map((i) => <Item key={i.to} item={i} badge={badgeOf(i)} />)}
@@ -51,6 +51,12 @@ export function Sidebar() {
             <span className="block truncate text-sm font-semibold text-ink">{profile?.full_name}</span>
             <span className="block truncate text-xs text-muted">@{profile?.username}</span>
           </span>
+        </NavLink>
+        <NavLink to="/settings" className={({ isActive }) => cn(
+          'flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors',
+          isActive ? 'bg-brand text-on-brand' : 'text-muted hover:bg-mint/70',
+        )}>
+          <Settings className="h-5 w-5" aria-hidden="true" /> Settings
         </NavLink>
         <div className="flex items-center gap-1">
           <button type="button" onClick={() => void signOut()}

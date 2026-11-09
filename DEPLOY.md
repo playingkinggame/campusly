@@ -8,6 +8,7 @@
    2. `supabase/phase2_additions.sql`
    3. `supabase/phase3_additions.sql` (lost & found photo bucket; safe to re-run)
    4. `supabase/phase4_password_auth.sql` (password sign-in helpers; safe to re-run)
+   5. `supabase/phase6_themes.sql` (saved theme preference; safe to re-run, never overwrites a chosen theme). Optional check: `phase6_verify.sql`. If you ever re-run phase 1, run this again afterwards.
 3. **Authentication -> Sign In / Providers -> Email**: Email provider ON, minimum password length `8`. Keep **Confirm email** ON for a real launch (students must click the link sent to their `@vitstudent.ac.in` inbox). For quick local testing you may turn it off.
 4. **Authentication -> URL Configuration**: set **Site URL** to your live address. Add to **Redirect URLs**:
    - `http://localhost:3000/app.html`

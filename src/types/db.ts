@@ -28,6 +28,8 @@ export interface MyProfile {
   hide_reg_no: boolean;
   last_seen_at: string | null;
   onboarded: boolean;
+  /** Saved theme id (phase6_themes.sql). Undefined until that migration has been run. */
+  theme?: string | null;
   created_at: string;
   updated_at: string;
 }

@@ -17,7 +17,7 @@ export function Tabs({ tabs, value, onChange, label }: Props) {
             )}
           >
             {t.label}
-            {!!t.badge && <span className="rounded-full bg-brand px-1.5 text-xs text-white">{t.badge > 99 ? '99+' : t.badge}</span>}
+            {!!t.badge && <span className="rounded-full bg-brand px-1.5 text-xs text-on-brand">{t.badge > 99 ? '99+' : t.badge}</span>}
           </button>
         );
       })}

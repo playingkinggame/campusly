@@ -90,7 +90,7 @@ export default function ChatListPage() {
                   <Link to={href} className="flex items-center gap-3 rounded-2xl p-3 hover:bg-mint/40">
                     <span className="relative shrink-0">
                       <Avatar path={isGroup ? conv.group_avatar : person?.avatar_path} name={name} size={48} />
-                      {isOnline && <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-cream bg-green-500" aria-label="Online" />}
+                      {isOnline && <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-cream bg-success" aria-label="Online" />}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-2">

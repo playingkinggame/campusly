@@ -57,7 +57,7 @@ function ChatHeader({ person, online }: { person: PublicProfile | null; online: 
       <Link to={person ? `/u/${person.username}` : '/chat'} className="flex min-w-0 flex-1 items-center gap-2">
         <span className="relative shrink-0">
           <Avatar path={person?.avatar_path} name={name} size={40} />
-          {online && <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-cream bg-green-500" aria-label="Online" />}
+          {online && <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-cream bg-success" aria-label="Online" />}
         </span>
         <span className="min-w-0">
           <span className="block truncate text-sm font-semibold text-forest">{name}</span>

@@ -40,7 +40,7 @@ function MediaFile({ path, name, mime }: { path: string; name: string | null; mi
       <FileText className="h-5 w-5 shrink-0" aria-hidden="true" />
       <span className="min-w-0 flex-1"><span className="block truncate text-xs font-semibold">{name ?? 'File'}</span><span className="block text-[10px] opacity-70">{mime ?? 'attachment'}</span></span>
       {failed ? <span className="text-[10px] opacity-70">Unavailable</span> : url ? (
-        <a href={url} target="_blank" rel="noreferrer noopener" aria-label={`Download ${name ?? 'file'}`} className="rounded-full p-1 hover:bg-white/20"><Download className="h-4 w-4" aria-hidden="true" /></a>
+        <a href={url} target="_blank" rel="noreferrer noopener" aria-label={`Download ${name ?? 'file'}`} className="rounded-full p-1 hover:bg-on-brand/20"><Download className="h-4 w-4" aria-hidden="true" /></a>
       ) : <span className="text-[10px] opacity-70">Loading…</span>}
     </div>
   );
@@ -99,13 +99,13 @@ export function MessageBubble({ message, meId, isMine, showAuthor, canPin, onRep
       {showAuthor && !isMine && <Avatar path={message.sender?.avatar_path} name={message.sender?.full_name} size={28} className="mt-1" />}
       <div className={cn('flex max-w-[86%] flex-col sm:max-w-[76%]', isMine ? 'items-end' : 'items-start')}>
         {showAuthor && !isMine && <p className="mb-0.5 px-1 text-[11px] font-semibold text-muted">{message.sender?.full_name ?? 'Someone'}</p>}
-        <div className={cn('rounded-2xl px-3 py-2 text-sm shadow-sm', isMine ? 'rounded-br-md bg-brand text-white' : 'rounded-bl-md border border-line bg-surface text-ink')}>
+        <div className={cn('rounded-2xl px-3 py-2 text-sm shadow-sm', isMine ? 'rounded-br-md bg-brand text-on-brand' : 'rounded-bl-md border border-line bg-surface text-ink')}>
           {deleted ? (
-            <p className={cn('italic', isMine ? 'text-white/75' : 'text-muted')}>This message was unsent</p>
+            <p className={cn('italic', isMine ? 'text-on-brand/75' : 'text-muted')}>This message was unsent</p>
           ) : (
             <>
               {message.reply && (
-                <div className={cn('mb-2 rounded-xl border-l-2 px-2 py-1 text-xs', isMine ? 'border-white/40 bg-white/10 text-white/75' : 'border-forest/40 bg-mint/40 text-muted')}>
+                <div className={cn('mb-2 rounded-xl border-l-2 px-2 py-1 text-xs', isMine ? 'border-on-brand/40 bg-on-brand/10 text-on-brand/75' : 'border-forest/40 bg-mint/40 text-muted')}>
                   <p className="font-semibold">{message.reply.sender_name}</p>
                   <p className="line-clamp-2">{message.reply.body ?? (message.reply.kind === 'voice' ? 'Voice note' : 'Attachment')}</p>
                 </div>
@@ -116,7 +116,7 @@ export function MessageBubble({ message, meId, isMine, showAuthor, canPin, onRep
               {message.kind === 'voice' && message.media_path && <VoicePlayer path={message.media_path} durationMs={message.duration_ms} waveform={message.waveform} mine={isMine} />}
             </>
           )}
-          <div className={cn('mt-1 flex items-center gap-1.5 text-[10px]', isMine ? 'justify-end text-white/65' : 'text-muted')}>
+          <div className={cn('mt-1 flex items-center gap-1.5 text-[10px]', isMine ? 'justify-end text-on-brand/65' : 'text-muted')}>
             <span title={formatDateTime(message.created_at)}>{formatClock(message.created_at)}</span>
             {message.edited_at && !deleted && <span>(edited)</span>}
             {isMine && (
@@ -125,7 +125,7 @@ export function MessageBubble({ message, meId, isMine, showAuthor, canPin, onRep
               </span>
             )}
             {!deleted && (
-              <button type="button" onClick={() => setActionsOpen(true)} aria-label="Message actions" className={cn('rounded-full p-0.5 hover:bg-black/10', isMine ? 'text-white/75' : 'text-muted')}><MoreHorizontal className="h-3.5 w-3.5" aria-hidden="true" /></button>
+              <button type="button" onClick={() => setActionsOpen(true)} aria-label="Message actions" className={cn('rounded-full p-0.5 hover:bg-black/10', isMine ? 'text-on-brand/75' : 'text-muted')}><MoreHorizontal className="h-3.5 w-3.5" aria-hidden="true" /></button>
             )}
           </div>
         </div>

@@ -15,7 +15,7 @@ export function Toaster() {
             role={t.kind === 'error' ? 'alert' : 'status'}
             className={cn(
               'pointer-events-auto flex max-w-md items-center gap-2 rounded-2xl px-4 py-3 text-left text-sm font-medium shadow-lg',
-              t.kind === 'error' ? 'bg-danger text-white' : 'bg-brand text-white',
+              t.kind === 'error' ? 'bg-danger text-white' : 'bg-brand text-on-brand',
             )}
           >
             <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />

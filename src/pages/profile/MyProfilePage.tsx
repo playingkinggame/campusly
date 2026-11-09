@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Pencil } from 'lucide-react';
+import { Pencil, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/Feedback';
 import { ProfileView } from '@/components/profile/ProfileView';
@@ -48,11 +48,18 @@ export default function MyProfilePage() {
       profile={toPublicProfile(profile)}
       isOwn
       actions={
-        <Link to="/profile/edit">
-          <Button size="sm">
-            <Pencil className="h-4 w-4" aria-hidden="true" /> Edit profile
-          </Button>
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link to="/profile/edit">
+            <Button size="sm">
+              <Pencil className="h-4 w-4" aria-hidden="true" /> Edit profile
+            </Button>
+          </Link>
+          <Link to="/settings">
+            <Button size="sm" variant="secondary">
+              <Settings className="h-4 w-4" aria-hidden="true" /> Settings
+            </Button>
+          </Link>
+        </div>
       }
     />
   );

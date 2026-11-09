@@ -8,6 +8,7 @@ import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { PageBoundary } from '@/components/layout/PageBoundary';
 import { Toaster } from '@/components/ui/Toaster';
 import { Spinner } from '@/components/ui/Feedback';
+import { ThemeProvider } from '@/themes/theme-provider';
 import LoginPage from '@/pages/auth/LoginPage';
 import SignupPage from '@/pages/auth/SignupPage';
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
@@ -36,6 +37,7 @@ const RidesPage = lazy(() => import('@/pages/campus/RidesPage'));
 const ConfessionsPage = lazy(() => import('@/pages/campus/ConfessionsPage'));
 const SeniorsPage = lazy(() => import('@/pages/campus/SeniorsPage'));
 const NoticesPage = lazy(() => import('@/pages/campus/NoticesPage'));
+const SettingsPage = lazy(() => import('@/pages/settings/SettingsPage'));
 const AdminPage = lazy(() => import('@/pages/admin/AdminPage'));
 
 function Loading() {
@@ -54,6 +56,7 @@ export default function App() {
 
   return (
     <ErrorBoundary>
+      <ThemeProvider>
       <HashRouter>
         <Routes>
           <Route element={<PublicOnlyRoute />}>
@@ -88,6 +91,7 @@ export default function App() {
               <Route path="/confessions" element={<Lazy><ConfessionsPage /></Lazy>} />
               <Route path="/seniors" element={<Lazy><SeniorsPage /></Lazy>} />
               <Route path="/notices" element={<Lazy><NoticesPage /></Lazy>} />
+              <Route path="/settings" element={<Lazy><SettingsPage /></Lazy>} />
               <Route element={<AdminRoute />}>
                 <Route path="/admin" element={<Lazy><AdminPage /></Lazy>} />
               </Route>
@@ -97,6 +101,7 @@ export default function App() {
         </Routes>
         <Toaster />
       </HashRouter>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

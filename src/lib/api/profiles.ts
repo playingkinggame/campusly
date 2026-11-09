@@ -1,6 +1,7 @@
 import { supabase } from '../supabase';
 import { unwrap } from '../errors';
 import type { MiniProfile, MyProfile, ProfilePatch, PublicProfile } from '@/types/db';
+import type { ThemeId } from '@/themes/types';
 
 export const PUBLIC_COLUMNS =
   'id, username, full_name, avatar_path, batch, branch, school, residence, hostel_block, clubs, languages, interests, bio, social_link, streak_count, hearts_total, reg_no, last_seen_at, created_at';
@@ -23,6 +24,15 @@ export async function updateMyProfile(userId: string, patch: ProfilePatch): Prom
   for (const k of GRANTED) if (k in patch) clean[k] = patch[k];
   const res = await supabase.from('profiles').update(clean).eq('id', userId).select('*').single();
   return unwrap<MyProfile>(res);
+}
+
+/**
+ * Saves the chosen theme on the signed-in user's own profile row. The database only allows this
+ * user to update this row (row-level security) and only this column besides the others in GRANTED.
+ */
+export async function saveThemePreference(userId: string, theme: ThemeId): Promise<void> {
+  const res = await supabase.from('profiles').update({ theme }).eq('id', userId).select('theme').single();
+  unwrap<{ theme: string }>(res);
 }
 
 export async function isUsernameAvailable(username: string): Promise<boolean> {

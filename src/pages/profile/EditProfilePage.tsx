@@ -1,10 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Palette } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/Feedback';
 import { ProfileForm } from '@/components/profile/ProfileForm';
 import { PrivacyPanel } from '@/components/profile/PrivacyPanel';
-import { AppearancePanel } from '@/components/theme/AppearancePanel';
 import { useAuth } from '@/store/authStore';
 import { toast } from '@/store/uiStore';
 
@@ -39,7 +38,16 @@ export default function EditProfilePage() {
         />
       </Card>
 
-      <AppearancePanel />
+      <Card>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-mint text-forest" aria-hidden="true"><Palette className="h-5 w-5" /></span>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-bold text-forest">Appearance &amp; Themes</h2>
+            <p className="text-sm text-muted">Pick one of six themes for your Campusly.</p>
+          </div>
+          <Link to="/settings" className="shrink-0 text-sm font-semibold text-forest hover:underline">Open settings</Link>
+        </div>
+      </Card>
 
       <PrivacyPanel />
     </div>

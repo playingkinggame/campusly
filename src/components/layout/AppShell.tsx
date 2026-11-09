@@ -1,4 +1,5 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useAuth } from '@/store/authStore';
 import { useShellSync } from '@/hooks/useShellSync';
@@ -18,13 +19,16 @@ export function AppShell() {
   return (
     <div className="flex min-h-screen bg-cream">
       <a href="#main" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }}
-        className="sr-only z-[200] rounded-xl bg-brand px-4 py-2 text-white focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
+        className="sr-only z-[200] rounded-xl bg-brand px-4 py-2 text-on-brand focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
         Skip to content
       </a>
       <Sidebar />
       <main id="main" tabIndex={-1} className="min-w-0 flex-1 pb-24 outline-none md:pb-8">
         <div className="sticky top-0 z-30 flex items-center justify-end gap-1 border-b border-line/50 bg-cream/85 px-4 py-2 backdrop-blur md:hidden">
           <ThemeToggle />
+          <Link to="/settings" aria-label="Settings" title="Settings" className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-forest transition-colors hover:bg-mint/70">
+            <Settings className="h-5 w-5" aria-hidden="true" />
+          </Link>
           <NotificationBell />
         </div>
         <motion.div

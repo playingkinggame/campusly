@@ -36,23 +36,23 @@ export function VoicePlayer({ path, durationMs, waveform, mine }: {
     } else { audio.pause(); setPlaying(false); }
   };
 
-  if (failed) return <p className={cn('text-xs', mine ? 'text-white/70' : 'text-muted')}>Voice note unavailable.</p>;
-  if (!url) return <p className={cn('text-xs', mine ? 'text-white/70' : 'text-muted')}>Loading voice note…</p>;
+  if (failed) return <p className={cn('text-xs', mine ? 'text-on-brand/70' : 'text-muted')}>Voice note unavailable.</p>;
+  if (!url) return <p className={cn('text-xs', mine ? 'text-on-brand/70' : 'text-muted')}>Loading voice note…</p>;
 
   const bars = waveform?.length ? waveform.slice(0, 48) : Array.from({ length: 30 }, () => 30);
   const ratio = duration > 0 ? Math.min(1, current / duration) : 0;
 
   return (
     <div className="flex min-w-[190px] items-center gap-2">
-      <button type="button" onClick={() => void toggle()} aria-label={playing ? 'Pause voice note' : 'Play voice note'} className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-full', mine ? 'bg-white/20 text-white' : 'bg-brand text-white')}>
+      <button type="button" onClick={() => void toggle()} aria-label={playing ? 'Pause voice note' : 'Play voice note'} className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-full', mine ? 'bg-on-brand/20 text-on-brand' : 'bg-brand text-on-brand')}>
         {playing ? <Pause className="h-3.5 w-3.5" aria-hidden="true" /> : <Play className="h-3.5 w-3.5" aria-hidden="true" />}
       </button>
       <div className="flex min-w-0 flex-1 items-center gap-[2px]" aria-hidden="true">
         {bars.map((value, index) => (
-          <span key={index} className={cn('w-[2px] rounded-full', index / bars.length <= ratio ? mine ? 'bg-white' : 'bg-brand' : mine ? 'bg-white/30' : 'bg-forest/20')} style={{ height: `${Math.max(4, Math.min(100, value) * 0.28)}px` }} />
+          <span key={index} className={cn('w-[2px] rounded-full', index / bars.length <= ratio ? mine ? 'bg-on-brand' : 'bg-brand' : mine ? 'bg-on-brand/30' : 'bg-forest/20')} style={{ height: `${Math.max(4, Math.min(100, value) * 0.28)}px` }} />
         ))}
       </div>
-      <span className={cn('shrink-0 text-[11px] tabular-nums', mine ? 'text-white/75' : 'text-muted')}>{clock(current > 0 ? current : duration)}</span>
+      <span className={cn('shrink-0 text-[11px] tabular-nums', mine ? 'text-on-brand/75' : 'text-muted')}>{clock(current > 0 ? current : duration)}</span>
       <audio ref={audioRef} src={url} preload="metadata" onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)} onLoadedMetadata={(e) => { if (Number.isFinite(e.currentTarget.duration)) setDuration(e.currentTarget.duration); }} onEnded={() => { setPlaying(false); setCurrent(0); }} className="hidden" />
     </div>
   );
