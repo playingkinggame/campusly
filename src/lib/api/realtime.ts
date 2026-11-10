@@ -97,3 +97,47 @@ export function openChatChannel(
     close: () => { alive = false; void supabase.removeChannel(channel); },
   };
 }
+
+/** One table to watch. `filter` is optional, for example `user_id=eq.<id>`. */
+export type LiveTable = string | { table: string; filter?: string };
+
+/**
+ * Calls onChange whenever a row in any of these tables changes (insert, update or delete).
+ * Row Level Security decides which changes this person is allowed to receive.
+ * onChange also fires after the connection comes back, so nothing is missed while offline.
+ */
+export function subscribeTables(name: string, tables: LiveTable[], onChange: () => void): () => void {
+  let wasDown = false;
+  let channel = supabase.channel(`live:${name}:${Math.random().toString(36).slice(2, 10)}`);
+  for (const t of tables) {
+    const spec = typeof t === 'string' ? { table: t } : t;
+    channel = channel.on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: spec.table, ...(spec.filter ? { filter: spec.filter } : {}) },
+      () => onChange(),
+    );
+  }
+  channel.subscribe((status) => {
+    if (status === 'SUBSCRIBED') {
+      if (wasDown) onChange();
+      wasDown = false;
+    } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
+      wasDown = true;
+    }
+  });
+  const handle = channel;
+  return () => { void supabase.removeChannel(handle); };
+}
+
+/** Streak, hearts and every other change to your OWN profile row, the moment it happens. */
+export function subscribeMyProfile(userId: string, onRow: (row: Record<string, unknown>) => void): () => void {
+  const channel = supabase
+    .channel(`my-profile:${userId}:${Math.random().toString(36).slice(2, 10)}`)
+    .on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${userId}` },
+      (payload) => { if (payload.new && typeof payload.new === 'object') onRow(payload.new as Record<string, unknown>); },
+    )
+    .subscribe();
+  return () => { void supabase.removeChannel(channel); };
+}

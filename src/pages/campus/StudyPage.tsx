@@ -15,12 +15,15 @@ import { friendlyError } from '@/lib/errors';
 import { createStudyRoom, deleteStudyNote, deleteStudyRoom, listStudyNotes, listStudyRooms, studyNoteUrl, uploadStudyNote, type StudyRoomWithCreator } from '@/lib/api/campus';
 import { searchText, tokenize } from '@/lib/search';
 import { formatDateTime, timeAgo } from '@/lib/utils';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 export default function StudyPage() {
   const me = useAuth((s) => s.userId) as string;
   const rooms = useAsync(listStudyRooms, []);
   const [openRoom, setOpenRoom] = useState<StudyRoomWithCreator | null>(null);
   const notes = useAsync(() => openRoom ? listStudyNotes(openRoom.id) : Promise.resolve([]), [openRoom?.id]);
+  useLiveReload(rooms.reload, { tables: ['study_rooms'] });
+  useLiveReload(notes.reload, { tables: ['study_notes'], enabled: !!openRoom });
   const [createOpen, setCreateOpen] = useState(false);
   const [form, setForm] = useState({ name: '', subject: '', description: '' });
   const [saving, setSaving] = useState(false);

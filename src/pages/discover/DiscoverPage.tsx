@@ -8,6 +8,7 @@ import { Leaderboard } from '@/components/discover/Leaderboard';
 import { usePaginated } from '@/hooks/usePaginated';
 import { discoverPeople } from '@/lib/api/discover';
 import type { DiscoverPerson } from '@/types/db';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 function sameFilters(a: DiscoverFilterValues, b: DiscoverFilterValues): boolean {
   return a.batch === b.batch && a.branch === b.branch && a.school === b.school
@@ -36,6 +37,7 @@ export default function DiscoverPage() {
     [applied.batch, applied.branch, applied.school, applied.residence, applied.interest, applied.query],
     24,
   );
+  useLiveReload(paged.refresh, { tables: ['connections'] });
 
   const apply = () => {
     const next: DiscoverFilterValues = {

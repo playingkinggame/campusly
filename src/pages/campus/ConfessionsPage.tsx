@@ -15,6 +15,7 @@ import { createConfession, listConfessions } from '@/lib/api/campus';
 import { deleteConfession } from '@/lib/api/admin';
 import { searchText, tokenize } from '@/lib/search';
 import { timeAgo } from '@/lib/utils';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 /** "Disappears in 11h" / "in 25m" */
 function leftLabel(iso?: string | null): string | null {
@@ -28,6 +29,8 @@ function leftLabel(iso?: string | null): string | null {
 export default function ConfessionsPage() {
   const isAdmin = useAuth((s) => s.isAdmin);
   const state = useAsync(listConfessions, []);
+  // the confessions feed is a filtered view, so Realtime cannot watch it: check every 30 seconds
+  useLiveReload(state.reload, { pollMs: 30000 });
   const [open, setOpen] = useState(false);
   const [body, setBody] = useState('');
   const [saving, setSaving] = useState(false);

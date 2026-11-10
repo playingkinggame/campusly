@@ -7,10 +7,13 @@ import { useAsync } from '@/hooks/useAsync';
 import { useAuth } from '@/store/authStore';
 import { getWeeklyLeaderboard } from '@/lib/api/discover';
 import { cn } from '@/lib/utils';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 export function Leaderboard() {
   const me = useAuth((s) => s.userId);
   const board = useAsync(() => getWeeklyLeaderboard(20), []);
+  // the leaderboard is a calculated view, so Realtime cannot watch it: check every 30 seconds
+  useLiveReload(board.reload, { pollMs: 30000 });
   const rows = board.data ?? [];
 
   return (

@@ -19,6 +19,10 @@ interface AuthState {
   init: () => void;
   reload: () => Promise<void>;
   setProfile: (p: MyProfile) => void;
+  /** Merge changed columns into the profile already on screen (used by live updates). */
+  patchProfile: (row: Partial<MyProfile>) => void;
+  /** Quietly fetch the newest profile (streak, hearts...) without showing a loading screen. */
+  refreshProfile: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -90,6 +94,24 @@ export const useAuth = create<AuthState>((set, get) => {
     },
 
     setProfile: (p) => set({ profile: p, status: p.onboarded ? 'ready' : 'needs_onboarding' }),
+
+    patchProfile: (row) => set((s) => (s.profile ? { profile: { ...s.profile, ...row } } : s)),
+
+    refreshProfile: async () => {
+      const { userId, status, profile } = get();
+      if (!userId || status !== 'ready') return;
+      try {
+        const fresh = await getMyProfile(userId);
+        if (!fresh) return;
+        // last_seen_at changes every minute; ignore it so screens do not re-draw for nothing
+        const sig = (p: MyProfile | null) => {
+          if (!p) return '';
+          const { last_seen_at: _a, updated_at: _b, ...rest } = p as MyProfile & { updated_at?: string };
+          return JSON.stringify(rest);
+        };
+        if (sig(fresh) !== sig(profile)) set({ profile: fresh });
+      } catch { /* keep showing what we already have */ }
+    },
 
     signOut: async () => {
       await apiSignOut();

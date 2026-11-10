@@ -17,12 +17,14 @@ import { friendlyError } from '@/lib/errors';
 import { createEvent, deleteEvent, listEvents, toggleGoing } from '@/lib/api/campus';
 import { searchText, tokenize } from '@/lib/search';
 import { formatDateTime } from '@/lib/utils';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 type Tab = 'upcoming' | 'past';
 
 export default function EventsPage() {
   const me = useAuth((s) => s.userId) as string;
   const state = useAsync(listEvents, []);
+  useLiveReload(state.reload, { tables: ['events', 'event_going'] });
   const [tab, setTab] = useState<Tab>('upcoming');
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);

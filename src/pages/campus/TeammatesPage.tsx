@@ -21,6 +21,7 @@ import {
 import type { TeammateMatch } from '@/types/db';
 import { searchText, tokenize } from '@/lib/search';
 import { timeAgo } from '@/lib/utils';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 type Tab = 'board' | 'invites';
 type InviteTab = 'incoming' | 'outgoing';
@@ -30,6 +31,8 @@ export default function TeammatesPage() {
   const board = useAsync(listTeammatePosts, []);
   const incoming = useAsync(() => listTeammateInvites('incoming'), []);
   const outgoing = useAsync(() => listTeammateInvites('outgoing'), []);
+  useLiveReload(board.reload, { tables: ['teammate_posts'] });
+  useLiveReload(() => { void incoming.reload(); void outgoing.reload(); }, { tables: ['teammate_invites'] });
   const [tab, setTab] = useState<Tab>('board');
   const [inviteTab, setInviteTab] = useState<InviteTab>('incoming');
   const [open, setOpen] = useState(false);

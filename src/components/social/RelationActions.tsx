@@ -13,6 +13,7 @@ import { giveHeart, hasHeartedThisWeek } from '@/lib/api/hearts';
 import { blockUser } from '@/lib/api/blocks';
 import { cn } from '@/lib/utils';
 import type { MiniProfile, RelationStatus } from '@/types/db';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 interface Props {
   person: Pick<MiniProfile, 'id' | 'username' | 'full_name'>;
@@ -37,6 +38,7 @@ export function RelationActions({
   const [relation, setRelation] = useState<RelationStatus | null>(initialRelation ?? null);
   const [relationId, setRelationId] = useState<string | null>(connectionId ?? null);
   const [loadingRelation, setLoadingRelation] = useState(initialRelation === undefined);
+  const [relationTick, setRelationTick] = useState(0);
   const [busy, setBusy] = useState<string | null>(null);
   const [hearted, setHearted] = useState(false);
   const [heartBusy, setHeartBusy] = useState(false);
@@ -48,7 +50,7 @@ export function RelationActions({
   useEffect(() => {
     let alive = true;
     if (initialRelation === undefined) {
-      setLoadingRelation(true);
+      if (relationTick === 0) setLoadingRelation(true);  // live refreshes stay quiet
       getRelation(person.id)
         .then((r) => {
           if (!alive) return;
@@ -67,7 +69,10 @@ export function RelationActions({
       setLoadingRelation(false);
     }
     return () => { alive = false; };
-  }, [person.id, initialRelation, connectionId]);
+  }, [person.id, initialRelation, connectionId, relationTick]);
+
+  // On a profile page the other person may accept or cancel while you look at it.
+  useLiveReload(() => setRelationTick((t) => t + 1), { tables: ['connections'], enabled: initialRelation === undefined });
 
   useEffect(() => {
     let alive = true;

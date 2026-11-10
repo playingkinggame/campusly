@@ -23,6 +23,7 @@ import {
 } from '@/lib/api/groups';
 import { formatDateTime, timeAgo } from '@/lib/utils';
 import type { GroupRole, MiniProfile } from '@/types/db';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 type Tab = 'chat' | 'members' | 'announcements' | 'pinned';
 
@@ -56,6 +57,7 @@ export default function GroupDetailPage() {
     ]);
     return { ...data, announcements, pinned, connections };
   }, [id]);
+  useLiveReload(state.reload, { tables: ['groups', 'group_members', 'announcements', 'pinned_messages'] });
 
   const group = state.data?.group;
   const role = state.data?.role ?? null;

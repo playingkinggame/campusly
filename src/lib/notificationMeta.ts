@@ -8,4 +8,5 @@ export const NOTIFICATION_META: Record<NotificationKind, NotificationMeta> = {
   teammate_invite: { text: 'invited you to join their team', to: '/teammates' },
   senior_question: { text: 'asked you a question', to: '/seniors' },
   senior_answer: { text: 'answered your question', to: '/seniors' },
+  heart: { text: 'gave you a heart', to: '/profile' },
 };

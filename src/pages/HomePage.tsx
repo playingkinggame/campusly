@@ -13,6 +13,7 @@ import { friendlyError } from '@/lib/errors';
 import { listNotifications, markAllNotificationsRead, type NotificationWithActor } from '@/lib/api/notifications';
 import { cn, firstName as getFirstName, timeAgo } from '@/lib/utils';
 import type { NotificationKind } from '@/types/db';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 const TEXT: Record<NotificationKind, { text: string; to: string }> = {
   connection_request: { text: 'sent you a connection request', to: '/requests' },
@@ -20,6 +21,7 @@ const TEXT: Record<NotificationKind, { text: string; to: string }> = {
   teammate_invite: { text: 'invited you to join their team', to: '/teammates' },
   senior_question: { text: 'asked you a question', to: '/seniors' },
   senior_answer: { text: 'answered your question', to: '/seniors' },
+  heart: { text: 'gave you a heart', to: '/profile' },
 };
 
 function Stat({ icon: Icon, label, value, to }: { icon: typeof Flame; label: string; value: number; to?: string }) {
@@ -39,6 +41,10 @@ export default function HomePage() {
   const profile = useAuth((s) => s.profile);
   const unread = useUnread();
   const notes = useAsync(listNotifications, []);
+  useLiveReload(notes.reload, {
+    tables: [{ table: 'notifications', filter: `user_id=eq.${profile?.id ?? ''}` }],
+    enabled: !!profile?.id,
+  });
 
   const markRead = async () => {
     try {

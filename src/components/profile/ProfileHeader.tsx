@@ -7,6 +7,7 @@ import { useAsync } from '@/hooks/useAsync';
 import { listUserBadges } from '@/lib/api/badges';
 import { formatLastSeen, isValidUrl } from '@/lib/utils';
 import type { PublicProfile } from '@/types/db';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 interface Props {
   profile: PublicProfile;
@@ -16,6 +17,7 @@ interface Props {
 
 export function ProfileHeader({ profile, isOwn, actions }: Props) {
   const badges = useAsync(() => listUserBadges(profile.id), [profile.id]);
+  useLiveReload(badges.reload, { tables: [{ table: 'user_badges', filter: `user_id=eq.${profile.id}` }] });
   const badgeRows = badges.data ?? [];
 
   const detailChips = [

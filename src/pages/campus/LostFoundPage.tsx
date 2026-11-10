@@ -17,6 +17,7 @@ import { friendlyError } from '@/lib/errors';
 import { createLostFound, deleteLostFound, listLostFound, lostFoundImageUrl, resolveLostFound } from '@/lib/api/campus';
 import { searchText, tokenize } from '@/lib/search';
 import { timeAgo } from '@/lib/utils';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 type Tab = 'all' | 'lost' | 'found';
 
@@ -30,6 +31,7 @@ function Photo({ path }: { path: string }) {
 export default function LostFoundPage() {
   const me = useAuth((s) => s.userId) as string;
   const state = useAsync(listLostFound, []);
+  useLiveReload(state.reload, { tables: ['lost_found'] });
   const [tab, setTab] = useState<Tab>('all');
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ kind: 'lost' as 'lost' | 'found', title: '', description: '', location: '' });

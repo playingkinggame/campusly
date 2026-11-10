@@ -197,7 +197,7 @@ export interface AdminReport {
 export interface BlockedUser { blocked_id: string; username: string | null; full_name: string | null; avatar_path: string | null; blocked_at: string }
 
 export type NotificationKind =
-  'connection_request' | 'connection_accepted' | 'teammate_invite' | 'senior_question' | 'senior_answer';
+  'connection_request' | 'connection_accepted' | 'teammate_invite' | 'senior_question' | 'senior_answer' | 'heart';
 export interface AppNotification {
   id: string; user_id: string; kind: NotificationKind; actor_id: string | null; ref_id: string | null;
   created_at: string; read_at: string | null;

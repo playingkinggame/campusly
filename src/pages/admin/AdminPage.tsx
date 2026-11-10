@@ -14,6 +14,7 @@ import { deleteConfession, listAdminConfessions, listReports, resolveReport, rev
 import { searchText, tokenize } from '@/lib/search';
 import { timeAgo } from '@/lib/utils';
 import type { AdminConfession, AdminReport, ConfessionScope } from '@/types/db';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 type Tab = 'reports' | 'confessions';
 type Status = 'open' | 'reviewing' | 'actioned' | 'dismissed' | 'all';
@@ -39,6 +40,10 @@ export default function AdminPage() {
   const confessions = useAsync(() => listAdminConfessions(scope), [scope]);
   const pendingCount = useAsync(() => listAdminConfessions('pending'), []);
   const openCount = useAsync(() => listReports('open'), []);
+  useLiveReload(
+    () => { void reports.reload(); void confessions.reload(); void pendingCount.reload(); void openCount.reload(); },
+    { tables: ['reports'], pollMs: 20000 },
+  );
 
   const tokens = tokenize(query);
   const reportRows = useMemo(

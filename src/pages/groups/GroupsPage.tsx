@@ -13,6 +13,7 @@ import { friendlyError } from '@/lib/errors';
 import { searchText, tokenize } from '@/lib/search';
 import { joinGroup, listMyGroups, listPublicGroups, type GroupWithRole } from '@/lib/api/groups';
 import type { Group } from '@/types/db';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 type Tab = 'mine' | 'browse';
 
@@ -25,6 +26,7 @@ export default function GroupsPage() {
     const mineIds = new Set(mine.map((g) => g.id));
     return { mine, browse: publicGroups.filter((g) => !mineIds.has(g.id)) };
   }, []);
+  useLiveReload(state.reload, { tables: ['groups', 'group_members'] });
 
   const join = async (group: Group) => {
     setJoining(group.id);

@@ -9,6 +9,8 @@ export interface Paginated<T> {
   moreError: string | null;
   hasMore: boolean;
   reload: () => void;
+  /** Re-fetch what is already loaded without clearing the list or showing a spinner. */
+  refresh: () => Promise<void>;
   loadMore: () => void;
 }
 
@@ -28,11 +30,13 @@ export function usePaginated<T>(
   const offsetRef = useRef(0);
   const requestRef = useRef(0);
   const appendRef = useRef(false);
+  const busyRef = useRef(false);
   fetchRef.current = fetchPage;
 
   const run = useCallback(async (offset: number, append: boolean) => {
     const request = ++requestRef.current;
     appendRef.current = append;
+    busyRef.current = true;
     if (append) {
       setLoadingMore(true);
       setMoreError(null);
@@ -54,6 +58,7 @@ export function usePaginated<T>(
       else setError(friendlyError(e));
     } finally {
       if (request === requestRef.current) {
+        busyRef.current = false;
         setLoading(false);
         setLoadingMore(false);
       }
@@ -73,10 +78,22 @@ export function usePaginated<T>(
     void run(0, false);
   }, [run]);
 
+  const refresh = useCallback(async () => {
+    if (busyRef.current) return;
+    const limit = Math.min(Math.max(offsetRef.current, pageSize), 100);
+    try {
+      const page = await fetchRef.current(0, limit);
+      if (busyRef.current) return;
+      setItems(page);
+      offsetRef.current = page.length;
+      setHasMore(page.length === limit);
+    } catch { /* keep the list we already have */ }
+  }, [pageSize]);
+
   const loadMore = useCallback(() => {
     if (!hasMore || loading || loadingMore) return;
     void run(offsetRef.current, true);
   }, [hasMore, loading, loadingMore, run]);
 
-  return { items, loading, loadingMore, error, moreError, hasMore, reload, loadMore };
+  return { items, loading, loadingMore, error, moreError, hasMore, reload, refresh, loadMore };
 }

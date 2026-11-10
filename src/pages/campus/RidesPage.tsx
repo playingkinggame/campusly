@@ -16,10 +16,12 @@ import { friendlyError } from '@/lib/errors';
 import { searchText, tokenize } from '@/lib/search';
 import { createRide, deleteRide, listRides, setRideStatus } from '@/lib/api/campus';
 import { formatDateTime } from '@/lib/utils';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 export default function RidesPage() {
   const me = useAuth((s) => s.userId) as string;
   const state = useAsync(listRides, []);
+  useLiveReload(state.reload, { tables: ['rides'] });
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [query, setQuery] = useState('');

@@ -17,6 +17,7 @@ import { friendlyError } from '@/lib/errors';
 import { answerSeniorQuestion, askSenior, listIncomingSeniorQuestions, listMySeniorQuestions, listSeniors } from '@/lib/api/campus';
 import { timeAgo } from '@/lib/utils';
 import type { PublicProfile } from '@/types/db';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 type Tab = 'seniors' | 'mine' | 'incoming';
 
@@ -25,6 +26,7 @@ export default function SeniorsPage() {
   const seniors = useAsync(() => listSeniors(profile?.batch ?? 9999), [profile?.batch]);
   const mine = useAsync(listMySeniorQuestions, []);
   const incoming = useAsync(listIncomingSeniorQuestions, []);
+  useLiveReload(() => { void mine.reload(); void incoming.reload(); }, { tables: ['senior_questions'] });
   const [tab, setTab] = useState<Tab>('seniors');
   const [target, setTarget] = useState<PublicProfile | null>(null);
   const [question, setQuestion] = useState('');

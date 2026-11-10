@@ -16,6 +16,7 @@ import { listAccepted, listIncoming, listOutgoing, removeConnection, respond, ty
 import { searchPeople, tokenize } from '@/lib/search';
 import { timeAgo } from '@/lib/utils';
 import type { MiniProfile } from '@/types/db';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 type TabId = 'incoming' | 'outgoing' | 'accepted';
 
@@ -29,6 +30,7 @@ export default function RequestsPage() {
     const [incoming, outgoing, accepted] = await Promise.all([listIncoming(), listOutgoing(), listAccepted()]);
     return { incoming, outgoing, accepted };
   }, []);
+  useLiveReload(state.reload, { tables: ['connections'] });
 
   const lists = state.data ?? { incoming: [], outgoing: [], accepted: [] };
   const allRows = (lists[tab] as ConnectionWithPerson[]).filter(

@@ -13,10 +13,12 @@ import { toast } from '@/store/uiStore';
 import { friendlyError } from '@/lib/errors';
 import { createNotice, deleteNotice, listNotices, setNoticePinned } from '@/lib/api/campus';
 import { formatDateTime, timeAgo } from '@/lib/utils';
+import { useLiveReload } from '@/hooks/useLiveReload';
 
 export default function NoticesPage() {
   const isAdmin = useAuth((s) => s.isAdmin);
   const state = useAsync(listNotices, []);
+  useLiveReload(state.reload, { tables: ['notices'] });
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [query, setQuery] = useState('');
