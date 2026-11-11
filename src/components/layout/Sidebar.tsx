@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router-dom';
-import { LogOut, Palette } from 'lucide-react';
+import { LogOut, Palette, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useAuth } from '@/store/authStore';
 import { useUnread } from '@/store/unreadStore';
+import { useSidebar } from '@/store/sidebarStore';
 import { Avatar } from '@/components/ui/Avatar';
 import { CountBadge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
@@ -9,19 +10,29 @@ import { ADMIN_ITEM, CAMPUS_ITEMS, PROFILE_ITEM, SIDEBAR_MAIN, type NavItem } fr
 import { Brand } from './Brand';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
-function Item({ item, badge }: { item: NavItem; badge: number }) {
+/** One menu row. When the sidebar is collapsed only the icon shows (label stays for screen readers + tooltip). */
+function Item({ item, badge, collapsed }: { item: NavItem; badge: number; collapsed: boolean }) {
   const Icon = item.icon;
   return (
     <NavLink
       to={item.to} end={item.to === '/'}
+      aria-label={collapsed ? item.label : undefined}
+      title={collapsed ? item.label : undefined}
       className={({ isActive }) => cn(
-        'flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors',
+        'relative flex items-center rounded-2xl py-2.5 text-sm font-semibold transition-colors',
+        collapsed ? 'justify-center px-0' : 'gap-3 px-3',
         isActive ? 'bg-brand text-on-brand' : 'text-forest/80 hover:bg-mint/70',
       )}
     >
-      <Icon className="h-5 w-5" aria-hidden="true" />
-      <span className="flex-1">{item.label}</span>
-      <CountBadge n={badge} />
+      <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+      {collapsed ? (
+        badge > 0 && <span className="absolute right-1 top-0.5 scale-90"><CountBadge n={badge} /></span>
+      ) : (
+        <>
+          <span className="flex-1 whitespace-nowrap">{item.label}</span>
+          <CountBadge n={badge} />
+        </>
+      )}
     </NavLink>
   );
 }
@@ -31,37 +42,92 @@ export function Sidebar() {
   const isAdmin = useAuth((s) => s.isAdmin);
   const signOut = useAuth((s) => s.signOut);
   const unread = useUnread();
+  const collapsed = useSidebar((s) => s.collapsed);
+  const toggle = useSidebar((s) => s.toggle);
   const badgeOf = (i: NavItem) => (i.badge === 'chat' ? unread.chat : i.badge === 'requests' ? unread.requests : 0);
 
+  const rowClass = (isActive = false) => cn(
+    'flex items-center rounded-2xl py-2.5 text-sm font-semibold transition-colors',
+    collapsed ? 'justify-center px-0' : 'gap-3 px-3',
+    isActive ? 'bg-brand text-on-brand' : 'text-muted hover:bg-mint/70',
+  );
+
   return (
-    <aside className="hidden h-screen w-64 shrink-0 flex-col gap-4 border-r border-line bg-sidebar p-4 md:flex">
-      <div className="px-2 pt-1"><Brand /></div>
+    <aside
+      id="app-sidebar"
+      aria-label="Sidebar"
+      className={cn(
+        'sticky top-0 hidden h-screen shrink-0 flex-col gap-4 overflow-hidden border-r border-line bg-sidebar p-4 transition-[width] duration-200 ease-out md:flex',
+        collapsed ? 'w-[76px] px-3' : 'w-64',
+      )}
+    >
+      <div className={cn('flex pt-1', collapsed ? 'flex-col items-center gap-3' : 'items-center justify-between px-2')}>
+        {collapsed
+          ? <img src="/icons/icon.svg" alt="Campusly" className="h-8 w-8" />
+          : <Brand />}
+        <button
+          type="button"
+          onClick={toggle}
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-expanded={!collapsed}
+          aria-controls="app-sidebar"
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-forest/80 transition-colors hover:bg-mint/70"
+        >
+          {collapsed
+            ? <PanelLeftOpen className="h-5 w-5" aria-hidden="true" />
+            : <PanelLeftClose className="h-5 w-5" aria-hidden="true" />}
+        </button>
+      </div>
+
       <nav aria-label="Main" className="flex flex-col gap-1">
-        {SIDEBAR_MAIN.map((i) => <Item key={i.to} item={i} badge={badgeOf(i)} />)}
+        {SIDEBAR_MAIN.map((i) => <Item key={i.to} item={i} badge={badgeOf(i)} collapsed={collapsed} />)}
       </nav>
-      <nav aria-label="Campus" className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
-        <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Campus</p>
-        {CAMPUS_ITEMS.map((i) => <Item key={i.to} item={i} badge={0} />)}
-        {isAdmin && <Item item={ADMIN_ITEM} badge={0} />}
+
+      <nav aria-label="Campus" className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overflow-x-hidden">
+        {collapsed
+          ? <div className="mx-3 my-1.5 border-t border-line" role="separator" />
+          : <p className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted">Campus</p>}
+        {CAMPUS_ITEMS.map((i) => <Item key={i.to} item={i} badge={0} collapsed={collapsed} />)}
+        {isAdmin && <Item item={ADMIN_ITEM} badge={0} collapsed={collapsed} />}
       </nav>
+
       <div className="space-y-1 border-t border-line pt-3">
-        <NavLink to={PROFILE_ITEM.to} className="flex items-center gap-3 rounded-2xl px-2 py-2 hover:bg-mint/70">
+        <NavLink
+          to={PROFILE_ITEM.to}
+          aria-label={collapsed ? `Your profile, ${profile?.full_name ?? ''}` : undefined}
+          title={collapsed ? (profile?.full_name ?? 'Profile') : undefined}
+          className={cn('flex items-center rounded-2xl py-2 hover:bg-mint/70', collapsed ? 'justify-center px-0' : 'gap-3 px-2')}
+        >
           <Avatar path={profile?.avatar_path} name={profile?.full_name} size={36} />
-          <span className="min-w-0">
-            <span className="block truncate text-sm font-semibold text-ink">{profile?.full_name}</span>
-            <span className="block truncate text-xs text-muted">@{profile?.username}</span>
-          </span>
+          {!collapsed && (
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-semibold text-ink">{profile?.full_name}</span>
+              <span className="block truncate text-xs text-muted">@{profile?.username}</span>
+            </span>
+          )}
         </NavLink>
-        <NavLink to="/theme" className={({ isActive }) => cn(
-          'flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors',
-          isActive ? 'bg-brand text-on-brand' : 'text-muted hover:bg-mint/70',
-        )}>
-          <Palette className="h-5 w-5" aria-hidden="true" /> Theme
+
+        <NavLink
+          to="/theme"
+          aria-label={collapsed ? 'Theme' : undefined}
+          title={collapsed ? 'Theme' : undefined}
+          className={({ isActive }) => rowClass(isActive)}
+        >
+          <Palette className="h-5 w-5 shrink-0" aria-hidden="true" />
+          {!collapsed && 'Theme'}
         </NavLink>
-        <div className="flex items-center gap-1">
-          <button type="button" onClick={() => void signOut()}
-            className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold text-muted hover:bg-mint/70">
-            <LogOut className="h-5 w-5" aria-hidden="true" /> Log out
+
+        <div className={cn('flex gap-1', collapsed ? 'flex-col items-center' : 'items-center')}>
+          <button
+            type="button"
+            onClick={() => void signOut()}
+            aria-label={collapsed ? 'Log out' : undefined}
+            title={collapsed ? 'Log out' : undefined}
+            className={cn(rowClass(), collapsed ? 'w-full' : 'min-w-0 flex-1')}
+          >
+            <LogOut className="h-5 w-5 shrink-0" aria-hidden="true" />
+            {!collapsed && 'Log out'}
           </button>
           <ThemeToggle />
         </div>
