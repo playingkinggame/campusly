@@ -53,7 +53,7 @@ export type SignUpResult = 'signed_in' | 'confirm_email';
  * - "confirm_email": Supabase emailed a confirmation link; the user must click it first.
  * Non-VIT emails are also rejected by a database trigger, so this is not only a UI rule.
  */
-export async function signUpWithPassword(email: string, password: string): Promise<SignUpResult> {
+export async function signUpWithPassword(email: string, password: string, captchaToken?: string): Promise<SignUpResult> {
   const e = requireVitEmail(email);
   const problem = passwordProblem(password);
   if (problem) throw new AppError(problem);
@@ -61,7 +61,7 @@ export async function signUpWithPassword(email: string, password: string): Promi
   const { data, error } = await supabase.auth.signUp({
     email: e,
     password,
-    options: { emailRedirectTo: redirectBase() },
+    options: { emailRedirectTo: redirectBase(), ...(captchaToken ? { captchaToken } : {}) },
   });
   if (error) throw new AppError(friendlyError(error), (error as { code?: string }).code);
 
@@ -72,10 +72,14 @@ export async function signUpWithPassword(email: string, password: string): Promi
   return data.session ? 'signed_in' : 'confirm_email';
 }
 
-export async function signInWithPassword(email: string, password: string): Promise<Session> {
+export async function signInWithPassword(email: string, password: string, captchaToken?: string): Promise<Session> {
   const e = requireVitEmail(email);
   if (!password) throw new AppError('Enter your password.');
-  const { data, error } = await supabase.auth.signInWithPassword({ email: e, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: e,
+    password,
+    options: captchaToken ? { captchaToken } : undefined,
+  });
   if (error || !data.session) {
     throw new AppError(
       friendlyError(error ?? { message: 'Invalid login credentials' }),
@@ -86,16 +90,23 @@ export async function signInWithPassword(email: string, password: string): Promi
 }
 
 /** Sends the confirmation email again (for people who did not get it). */
-export async function resendConfirmation(email: string): Promise<void> {
+export async function resendConfirmation(email: string, captchaToken?: string): Promise<void> {
   const e = requireVitEmail(email);
-  const { error } = await supabase.auth.resend({ type: 'signup', email: e, options: { emailRedirectTo: redirectBase() } });
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email: e,
+    options: { emailRedirectTo: redirectBase(), ...(captchaToken ? { captchaToken } : {}) },
+  });
   if (error) throw new AppError(friendlyError(error));
 }
 
 /** Emails a reset link. Always resolves the same way so we never reveal who has an account. */
-export async function requestPasswordReset(email: string): Promise<void> {
+export async function requestPasswordReset(email: string, captchaToken?: string): Promise<void> {
   const e = requireVitEmail(email);
-  const { error } = await supabase.auth.resetPasswordForEmail(e, { redirectTo: redirectBase() });
+  const { error } = await supabase.auth.resetPasswordForEmail(e, {
+    redirectTo: redirectBase(),
+    ...(captchaToken ? { captchaToken } : {}),
+  });
   if (error) throw new AppError(friendlyError(error));
 }
 
@@ -117,6 +128,19 @@ export async function ensureMyProfile(): Promise<void> {
 
 export async function signOut(): Promise<void> {
   await supabase.auth.signOut();
+}
+
+/**
+ * Permanently deletes the signed-in student and all their data (phase 8 RPC).
+ * The caller should remove their files first (see deleteAllMyFiles in api/storage)
+ * so Storage ownership is cleared before the auth user goes away.
+ */
+export async function deleteAccount(): Promise<void> {
+  const { error } = await supabase.rpc('delete_my_account');
+  if (error) throw new AppError(friendlyError(error), (error as { code?: string }).code);
+  // The account no longer exists, so a global sign-out would hit a deleted user.
+  // If even the local cleanup fails, the account is still gone — do not report a failed deletion.
+  try { await supabase.auth.signOut({ scope: 'local' }); } catch { /* session is gone with the account */ }
 }
 
 export async function getSession(): Promise<Session | null> {

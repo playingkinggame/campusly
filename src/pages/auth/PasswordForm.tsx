@@ -4,7 +4,9 @@ import { Check, Circle, LogIn, MailCheck, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Field';
 import { PasswordField } from '@/components/ui/PasswordField';
+import { TurnstileWidget } from '@/components/auth/TurnstileWidget';
 import { AppError, friendlyError } from '@/lib/errors';
+import { captchaEnabled } from '@/lib/captcha';
 import {
   MIN_PASSWORD_LENGTH, checkPassword, cleanEmail, passwordProblem,
   resendConfirmation, signInWithPassword, signUpWithPassword,
@@ -48,12 +50,21 @@ export function PasswordForm({ mode }: { mode: 'login' | 'signup' }) {
   const [needsConfirm, setNeedsConfirm] = useState(false);     // login blocked: email not confirmed yet
   const [sentTo, setSentTo] = useState<string | null>(null);    // signup done: "check your inbox" screen
   const [cooldown, setCooldown] = useState(0);
+  const [agreed, setAgreed] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaRound, setCaptchaRound] = useState(0);
 
   useEffect(() => {
     if (cooldown <= 0) return;
     const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
     return () => clearTimeout(t);
   }, [cooldown]);
+
+  /** Turnstile tokens are single-use, so mount a fresh check after every API call. */
+  const resetCaptcha = () => {
+    setCaptchaToken(null);
+    setCaptchaRound((r) => r + 1);
+  };
 
   const clearErrors = () => { setEmailError(null); setPasswordError(null); setConfirmError(null); setFormError(null); setNotice(null); setNeedsConfirm(false); };
 
@@ -71,36 +82,52 @@ export function PasswordForm({ mode }: { mode: 'login' | 'signup' }) {
     } else if (!password) {
       setPasswordError('Enter your password.'); bad = true;
     }
+    if (isSignup && !agreed) {
+      setFormError('Please accept the Terms of Service and Privacy Policy to create an account.'); bad = true;
+    } else if (captchaEnabled && !captchaToken) {
+      setFormError('Please complete the quick human check below.'); bad = true;
+    }
     if (bad) { shakeAuthCard(); return; }
 
     setBusy(true);
     try {
       if (isSignup) {
-        const result = await signUpWithPassword(em, password);
-        if (result === 'confirm_email') { setSentTo(em); setCooldown(30); setBusy(false); }
+        const result = await signUpWithPassword(em, password, captchaToken ?? undefined);
+        if (result === 'confirm_email') {
+          resetCaptcha();
+          setSentTo(em);
+          setCooldown(30);
+          setBusy(false);
+        }
         // "signed_in": the auth listener in the store takes over and the router moves us on.
       } else {
-        await signInWithPassword(em, password);
+        await signInWithPassword(em, password, captchaToken ?? undefined);
       }
     } catch (err) {
       if (err instanceof AppError && err.code === 'email_not_confirmed') setNeedsConfirm(true);
       setFormError(friendlyError(err));
       setBusy(false);
+      resetCaptcha();
       shakeAuthCard();
     }
   };
 
   const resend = async (to: string) => {
-    setResending(true);
     setFormError(null);
+    if (captchaEnabled && !captchaToken) {
+      setFormError('Please complete the quick human check below.');
+      return;
+    }
+    setResending(true);
     try {
-      await resendConfirmation(to);
+      await resendConfirmation(to, captchaToken ?? undefined);
       setCooldown(30);
       setNotice('We sent a new confirmation email.');
     } catch (err) {
       setFormError(friendlyError(err));
     } finally {
       setResending(false);
+      resetCaptcha();
     }
   };
 
@@ -117,11 +144,14 @@ export function PasswordForm({ mode }: { mode: 'login' | 'signup' }) {
         </div>
         {notice && <p role="status" className="text-sm text-forest">{notice}</p>}
         {formError && <p role="alert" className="text-sm text-danger-ink">{formError}</p>}
+        <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />
         <Button variant="secondary" size="lg" className="w-full" loading={resending}
           disabled={cooldown > 0} onClick={() => void resend(sentTo)}>
           {cooldown > 0 ? `Resend email in ${cooldown}s` : 'Resend email'}
         </Button>
-        <button type="button" onClick={() => { setSentTo(null); setPassword(''); setConfirm(''); setNotice(null); setFormError(null); }}
+        <button type="button" onClick={() => {
+          setSentTo(null); setPassword(''); setConfirm(''); setNotice(null); setFormError(null); resetCaptcha();
+        }}
           className="block w-full text-center text-sm font-semibold text-forest hover:underline">
           Use a different email
         </button>
@@ -155,6 +185,27 @@ export function PasswordForm({ mode }: { mode: 'login' | 'signup' }) {
           autoComplete="new-password" placeholder="Type it again" error={confirmError}
         />
       )}
+
+      {isSignup && (
+        <label className="flex items-start gap-3 rounded-2xl border border-line bg-surface/60 px-4 py-3 text-sm text-muted">
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={(e) => { setAgreed(e.target.checked); if (e.target.checked) setFormError(null); }}
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-line accent-forest"
+            required
+          />
+          <span>
+            I agree to the{' '}
+            <a href="#/terms" target="_blank" rel="noreferrer" className="font-semibold text-forest underline">Terms of Service</a>
+            {' '}and the{' '}
+            <a href="#/privacy" target="_blank" rel="noreferrer" className="font-semibold text-forest underline">Privacy Policy</a>,
+            and to Campusly storing my registration details, photos and messages to run the app.
+          </span>
+        </label>
+      )}
+
+      <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />
 
       {formError && <p role="alert" className="rounded-2xl bg-danger/10 px-4 py-3 text-sm text-danger-ink">{formError}</p>}
       {notice && <p role="status" className="rounded-2xl bg-mint/60 px-4 py-3 text-sm text-forest">{notice}</p>}

@@ -30,6 +30,8 @@ export interface MyProfile {
   onboarded: boolean;
   /** Saved theme id (phase6_themes.sql). Undefined until that migration has been run. */
   theme?: string | null;
+  /** When the Terms + Privacy Policy were accepted (set by a trigger, phase 8). */
+  terms_accepted_at?: string | null;
   created_at: string;
   updated_at: string;
 }

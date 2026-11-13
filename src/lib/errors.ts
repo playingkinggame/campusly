@@ -39,6 +39,8 @@ export function friendlyError(e: unknown): string {
     return 'This link has expired. Please request a new one.';
   if (low.includes('signups not allowed'))
     return 'Sign ups are turned off right now. Please try again later.';
+  if (low.includes('captcha'))
+    return 'Please complete the quick human check and try again.';
   if (low.includes('error sending') && low.includes('email'))
     return 'We could not send the email. Please try again in a minute.';
   if (low.includes('token has expired') || low.includes('invalid token'))

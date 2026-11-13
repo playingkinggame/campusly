@@ -17,6 +17,7 @@ npm run dev
 ```env
 VITE_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR-ANON-KEY
+VITE_TURNSTILE_SITE_KEY=YOUR-TURNSTILE-SITE-KEY
 ```
 
 Run the SQL files in `supabase/` in order (see [DEPLOY.md](DEPLOY.md)). Then reload the app.
@@ -39,6 +40,7 @@ Run the SQL files in `supabase/` in order (see [DEPLOY.md](DEPLOY.md)). Then rel
 - **Campus boards** — events with RSVP, teammate finder with smart matching and invites, study rooms with notes, lost & found, ride sharing.
 - **Community** — anonymous moderated confessions, senior connect Q&A, official notices.
 - **Notifications** — in-app bell, activity list, realtime unread badges.
+- **Privacy & account** — Privacy Policy and Terms pages, consent at sign-up, self-service account deletion and a 100 MB upload quota per student.
 - **Admin** — report queue, confession moderation, notice publishing.
 
 ## Structure
@@ -51,7 +53,7 @@ src/
   pages/        route screens
   store/        auth, unread and presence stores
   types/        database types
-supabase/       phase1, phase2 and phase3 SQL
+supabase/       phase1 ... phase8 SQL (run in order; see DEPLOY.md)
 ```
 
 ## Safety
@@ -59,4 +61,6 @@ supabase/       phase1, phase2 and phase3 SQL
 - RLS is enabled on every table; the app uses only the anon key.
 - Private storage buckets are read through signed URLs.
 - Reports, blocking, privacy toggles and confession moderation are built in.
+- Cloudflare Turnstile protects sign-up, log-in and password-reset requests from bots.
+- Account deletion removes the auth user (cascading to all app tables) and their files; storage uploads are capped per student in the database.
 - No service-role key belongs in this repository.

@@ -4,7 +4,9 @@ import { ArrowLeft, MailCheck, Send } from 'lucide-react';
 import { AuthLayout } from './AuthLayout';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Field';
+import { TurnstileWidget } from '@/components/auth/TurnstileWidget';
 import { friendlyError } from '@/lib/errors';
+import { captchaEnabled } from '@/lib/captcha';
 import { cleanEmail, requestPasswordReset } from '@/lib/api/auth';
 import { isVitEmail } from '@/lib/utils';
 import { VIT_EMAIL_DOMAIN } from '@/lib/constants';
@@ -15,6 +17,8 @@ export default function ForgotPasswordPage() {
   const [busy, setBusy] = useState(false);
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState(0);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaRound, setCaptchaRound] = useState(0);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -22,20 +26,27 @@ export default function ForgotPasswordPage() {
     return () => clearTimeout(t);
   }, [cooldown]);
 
+  const resetCaptcha = () => {
+    setCaptchaToken(null);
+    setCaptchaRound((r) => r + 1);
+  };
+
   const send = async (e?: FormEvent) => {
     e?.preventDefault();
     setError(null);
     const em = cleanEmail(email);
     if (!isVitEmail(em)) { setError(`Use your VIT student email (ends with ${VIT_EMAIL_DOMAIN}).`); return; }
+    if (captchaEnabled && !captchaToken) { setError('Please complete the quick human check below.'); return; }
     setBusy(true);
     try {
-      await requestPasswordReset(em);
+      await requestPasswordReset(em, captchaToken ?? undefined);
       setSentTo(em);
       setCooldown(30);
     } catch (err) {
       setError(friendlyError(err));
     } finally {
       setBusy(false);
+      resetCaptcha();
     }
   };
 
@@ -47,6 +58,8 @@ export default function ForgotPasswordPage() {
             <MailCheck className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
             <p>If an account exists for <strong>{sentTo}</strong>, a reset link is on its way. It may take a minute. Check spam too.</p>
           </div>
+          {error && <p role="alert" className="rounded-2xl bg-danger/10 px-4 py-3 text-sm text-danger-ink">{error}</p>}
+          <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />
           <Button variant="secondary" size="lg" className="w-full" loading={busy} disabled={cooldown > 0} onClick={() => void send()}>
             {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend link'}
           </Button>
@@ -57,6 +70,7 @@ export default function ForgotPasswordPage() {
             label="VIT student email" type="email" required autoComplete="email" inputMode="email"
             value={email} onChange={(e) => setEmail(e.target.value)} placeholder={`yourname${VIT_EMAIL_DOMAIN}`} error={error}
           />
+          <TurnstileWidget key={captchaRound} onToken={setCaptchaToken} />
           <Button type="submit" size="lg" loading={busy} className="w-full">
             <Send className="h-4 w-4" aria-hidden="true" /> Send reset link
           </Button>

@@ -18,6 +18,9 @@ import HomePage from '@/pages/HomePage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import SetupMissingPage from '@/pages/SetupMissingPage';
 
+const PrivacyPage = lazy(() => import('@/pages/legal/PrivacyPage'));
+const TermsPage = lazy(() => import('@/pages/legal/TermsPage'));
+
 const MyProfilePage = lazy(() => import('@/pages/profile/MyProfilePage'));
 const EditProfilePage = lazy(() => import('@/pages/profile/EditProfilePage'));
 const PublicProfilePage = lazy(() => import('@/pages/profile/PublicProfilePage'));
@@ -59,6 +62,9 @@ export default function App() {
       <ThemeProvider>
       <HashRouter>
         <Routes>
+          {/* Public legal pages: readable signed in or out, linked from sign-up and the landing footer. */}
+          <Route path="/privacy" element={<Lazy><PrivacyPage /></Lazy>} />
+          <Route path="/terms" element={<Lazy><TermsPage /></Lazy>} />
           <Route element={<PublicOnlyRoute />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />

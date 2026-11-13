@@ -96,3 +96,41 @@ export async function signedUrl(bucket: Bucket, path: string, download?: string 
 export function forgetSignedUrl(bucket: Bucket, path: string): void {
   for (const k of cache.keys()) if (k.startsWith(`${bucket}/${path}/`)) cache.delete(k);
 }
+
+// ---------------------------------------------------------------------------
+// Per-student upload quota (phase 8). The database enforces it; these helpers
+// only display usage and clean up files before an account is deleted.
+// ---------------------------------------------------------------------------
+export interface StorageUsage {
+  usedBytes: number;
+  limitBytes: number;
+}
+
+export async function myStorageUsage(): Promise<StorageUsage> {
+  const { data, error } = await supabase.rpc('my_storage_usage');
+  if (error) throw new AppError(friendlyError(error));
+  const row = (Array.isArray(data) ? data[0] : data) as { used_bytes?: number; limit_bytes?: number } | null;
+  return {
+    usedBytes: Number(row?.used_bytes ?? 0),
+    limitBytes: Number(row?.limit_bytes ?? 0),
+  };
+}
+
+/** Removes every file the signed-in student owns. Best effort; used before account deletion. */
+export async function deleteAllMyFiles(): Promise<void> {
+  const { data, error } = await supabase.rpc('my_storage_paths');
+  if (error) throw new AppError(friendlyError(error));
+
+  const byBucket = new Map<Bucket, string[]>();
+  for (const row of (data ?? []) as Array<{ bucket_id: Bucket; name: string }>) {
+    const list = byBucket.get(row.bucket_id) ?? [];
+    list.push(row.name);
+    byBucket.set(row.bucket_id, list);
+  }
+
+  for (const [bucket, paths] of byBucket) {
+    for (let i = 0; i < paths.length; i += 100) {
+      await supabase.storage.from(bucket).remove(paths.slice(i, i + 100));
+    }
+  }
+}

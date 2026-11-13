@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LogOut, Palette, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { LogOut, PanelLeftClose, PanelLeftOpen, Settings } from 'lucide-react';
 import { useAuth } from '@/store/authStore';
 import { useUnread } from '@/store/unreadStore';
 import { useSidebar } from '@/store/sidebarStore';
@@ -110,12 +110,12 @@ export function Sidebar() {
 
         <NavLink
           to="/theme"
-          aria-label={collapsed ? 'Theme' : undefined}
-          title={collapsed ? 'Theme' : undefined}
+          aria-label={collapsed ? 'Settings' : undefined}
+          title={collapsed ? 'Settings' : undefined}
           className={({ isActive }) => rowClass(isActive)}
         >
-          <Palette className="h-5 w-5 shrink-0" aria-hidden="true" />
-          {!collapsed && 'Theme'}
+          <Settings className="h-5 w-5 shrink-0" aria-hidden="true" />
+          {!collapsed && 'Settings'}
         </NavLink>
 
         <div className={cn('flex gap-1', collapsed ? 'flex-col items-center' : 'items-center')}>
